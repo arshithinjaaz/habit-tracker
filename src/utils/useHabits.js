@@ -24,9 +24,14 @@ export const useHabits = (userId = 'demo-user') => {
     }, (error) => {
       console.error('Firebase error:', error);
       // Fallback to local storage if Firebase fails
-      const localHabits = localStorage.getItem('habits');
-      if (localHabits) {
-        setHabits(JSON.parse(localHabits));
+      try {
+        const localHabits = localStorage.getItem('habits');
+        if (localHabits) {
+          setHabits(JSON.parse(localHabits));
+        }
+      } catch (parseError) {
+        console.error('Error parsing local habits:', parseError);
+        setHabits([]);
       }
       setLoading(false);
     });

@@ -27,20 +27,35 @@ const Questionnaire = ({ onComplete }) => {
   ], []);
 
   const [currentQuestion, setCurrentQuestion] = useState(() => {
-    const today = new Date().toDateString();
-    const savedAnswers = localStorage.getItem(`questionnaire_${today}`);
-    return savedAnswers ? questions.length : 0;
+    try {
+      const today = new Date().toDateString();
+      const savedAnswers = localStorage.getItem(`questionnaire_${today}`);
+      return savedAnswers ? questions.length : 0;
+    } catch (error) {
+      console.error('Error loading questionnaire state:', error);
+      return 0;
+    }
   });
 
   const [answers, setAnswers] = useState(() => {
-    const today = new Date().toDateString();
-    const savedAnswers = localStorage.getItem(`questionnaire_${today}`);
-    return savedAnswers ? JSON.parse(savedAnswers) : [];
+    try {
+      const today = new Date().toDateString();
+      const savedAnswers = localStorage.getItem(`questionnaire_${today}`);
+      return savedAnswers ? JSON.parse(savedAnswers) : [];
+    } catch (error) {
+      console.error('Error loading saved answers:', error);
+      return [];
+    }
   });
 
   const [isComplete, setIsComplete] = useState(() => {
-    const today = new Date().toDateString();
-    return !!localStorage.getItem(`questionnaire_${today}`);
+    try {
+      const today = new Date().toDateString();
+      return !!localStorage.getItem(`questionnaire_${today}`);
+    } catch (error) {
+      console.error('Error checking completion state:', error);
+      return false;
+    }
   });
 
   const MotionDiv = motion.div;

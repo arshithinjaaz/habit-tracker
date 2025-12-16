@@ -32,42 +32,59 @@ const ProgressGraph = () => {
   const [chartType, setChartType] = useState('line');
 
   const getInitialProgressData = useCallback(() => {
-    const saved = localStorage.getItem('progressData');
     let data = [];
     
-    if (saved) {
-      data = JSON.parse(saved);
-    } else {
-      // Generate sample data for the last 7 days
+    try {
+      const saved = localStorage.getItem('progressData');
+      if (saved) {
+        data = JSON.parse(saved);
+      } else {
+        // Generate sample data for the last 7 days
+        data = Array.from({ length: 7 }, (_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() - (6 - i));
+          return {
+            date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            score: Math.floor(Math.random() * 40) + 40, // 40-80% range
+          };
+        });
+      }
+    } catch (error) {
+      console.error('Error loading progress data:', error);
+      // Generate default data if parsing fails
       data = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - (6 - i));
         return {
           date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          score: Math.floor(Math.random() * 40) + 40, // 40-80% range
+          score: Math.floor(Math.random() * 40) + 40,
         };
       });
     }
 
     // Check if we need to update today's score
-    const today = new Date().toDateString();
-    const savedAnswers = localStorage.getItem(`questionnaire_${today}`);
-    if (savedAnswers) {
-      const answers = JSON.parse(savedAnswers);
-      const yesCount = answers.filter((a) => a.answer === 'yes').length;
-      const score = Math.round((yesCount / 8) * 100);
-      
-      const todayLabel = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const todayIndex = data.findIndex(d => d.date === todayLabel);
-      
-      if (todayIndex !== -1) {
-        data[todayIndex].score = score;
-      } else {
-        data.push({ date: todayLabel, score });
-        if (data.length > 7) data.shift();
+    try {
+      const today = new Date().toDateString();
+      const savedAnswers = localStorage.getItem(`questionnaire_${today}`);
+      if (savedAnswers) {
+        const answers = JSON.parse(savedAnswers);
+        const yesCount = answers.filter((a) => a.answer === 'yes').length;
+        const score = Math.round((yesCount / 8) * 100);
+        
+        const todayLabel = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const todayIndex = data.findIndex(d => d.date === todayLabel);
+        
+        if (todayIndex !== -1) {
+          data[todayIndex].score = score;
+        } else {
+          data.push({ date: todayLabel, score });
+          if (data.length > 7) data.shift();
+        }
+        
+        localStorage.setItem('progressData', JSON.stringify(data));
       }
-      
-      localStorage.setItem('progressData', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error updating today\'s score:', error);
     }
 
     return data;
@@ -116,9 +133,9 @@ const ProgressGraph = () => {
     ],
   }), [progressData]);
 
-  const avgScore = Math.round(
-    progressData.reduce((sum, d) => sum + d.score, 0) / progressData.length
-  );
+  const avgScore = progressData.length > 0 
+    ? Math.round(progressData.reduce((sum, d) => sum + d.score, 0) / progressData.length)
+    : 0;
 
   const doughnutData = useMemo(() => ({
     labels: ['Completed', 'Remaining'],
