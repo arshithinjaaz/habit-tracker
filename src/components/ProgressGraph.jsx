@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Box, Paper, Typography, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Paper, Typography, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Chip, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
 import {
   Chart as ChartJS,
@@ -16,6 +16,9 @@ import {
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 ChartJS.register(
   CategoryScale,
@@ -77,6 +80,21 @@ const ProgressGraph = ({ userName }) => {
 
   const [progressData, setProgressData] = useState(getInitialProgressData);
   const [openResetDialog, setOpenResetDialog] = useState(false);
+
+  // Calculate weekly summary stats
+  const weeklyStats = useMemo(() => {
+    const lastWeek = progressData.slice(-7);
+    if (lastWeek.length === 0) return null;
+    
+    const scores = lastWeek.map(d => d.score);
+    const bestDay = lastWeek.reduce((max, d) => d.score > max.score ? d : max, lastWeek[0]);
+    const worstDay = lastWeek.reduce((min, d) => d.score < min.score ? d : min, lastWeek[0]);
+    const avgScore = Math.round(scores.reduce((sum, s) => sum + s, 0) / scores.length);
+    const trend = scores.length > 1 ? scores[scores.length - 1] - scores[0] : 0;
+    const perfectDays = scores.filter(s => s === 100).length;
+    
+    return { bestDay, worstDay, avgScore, trend, perfectDays, totalDays: lastWeek.length };
+  }, [progressData]);
 
   // Filter data based on selected time period
   const filteredData = useMemo(() => {
@@ -190,13 +208,69 @@ const ProgressGraph = ({ userName }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
     >
+      {/* Weekly Summary Stats */}
+      {weeklyStats && (
+        <Paper
+          elevation={8}
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+          }}
+        >
+          <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <AssessmentIcon sx={{ fontSize: 32 }} />
+            <Typography variant="h5" fontWeight="bold">
+              Weekly Summary
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={4}>
+              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
+                <Typography variant="h4" fontWeight="bold">{weeklyStats.avgScore}%</Typography>
+                <Typography variant="body2">Average</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
+                <Typography variant="h4" fontWeight="bold">{weeklyStats.perfectDays}</Typography>
+                <Typography variant="body2">Perfect Days</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
+                <Box display="flex" alignItems="center" justifyContent="center" gap={0.5}>
+                  <Typography variant="h4" fontWeight="bold">{Math.abs(weeklyStats.trend)}%</Typography>
+                  {weeklyStats.trend >= 0 ? <TrendingUpIcon /> : <TrendingDownIcon />}
+                </Box>
+                <Typography variant="body2">Trend</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Chip 
+                icon={<EmojiEventsIcon />}
+                label={`Best: ${weeklyStats.bestDay.date} (${weeklyStats.bestDay.score}%)`}
+                sx={{ width: '100%', bgcolor: 'rgba(76, 175, 80, 0.9)', color: 'white', fontWeight: 'bold' }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Chip 
+                label={`Needs Work: ${weeklyStats.worstDay.date} (${weeklyStats.worstDay.score}%)`}
+                sx={{ width: '100%', bgcolor: 'rgba(244, 67, 54, 0.9)', color: 'white', fontWeight: 'bold' }}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+      )}
+
       <Paper
         elevation={8}
         sx={{
           p: 3,
           mb: 3,
           borderRadius: 3,
-          background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
         }}

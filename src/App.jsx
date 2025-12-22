@@ -1,16 +1,19 @@
-import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button, IconButton, Tooltip, useMediaQuery, Paper } from '@mui/material';
+import { useState, useEffect, useMemo } from 'react';
 import WelcomeScreen from './components/WelcomeScreen';
 import MemoryLogger from './components/MemoryLogger';
 import ProgressGraph from './components/ProgressGraph';
 import HollaCharacter from './components/HollaCharacter';
 import HabitCheckbox from './components/HabitCheckbox';
+import Onboarding from './components/Onboarding';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
-const theme = createTheme({
+const getTheme = (mode) => createTheme({
   palette: {
-    mode: 'light',
+    mode,
     primary: {
       main: '#667eea',
     },
@@ -18,8 +21,8 @@ const theme = createTheme({
       main: '#764ba2',
     },
     background: {
-      default: '#f5f7fa',
-      paper: '#ffffff',
+      default: mode === 'light' ? '#f5f7fa' : '#121212',
+      paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
     },
   },
   typography: {
@@ -58,6 +61,24 @@ function App() {
   const [habitProgress, setHabitProgress] = useState(0);
   const [hollaMood, setHollaMood] = useState('happy');
   const [hollaMessage, setHollaMessage] = useState("Let's build great habits together!");
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !localStorage.getItem('onboardingCompleted');
+  });
+
+  const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const toggleDarkMode = () => {
+    setDarkMode(prev => {
+      const newMode = !prev;
+      localStorage.setItem('darkMode', JSON.stringify(newMode));
+      return newMode;
+    });
+  };
 
   // Check for existing user on mount
   useEffect(() => {
@@ -116,6 +137,10 @@ function App() {
     );
   }
 
+      {/* Onboarding Tutorial */}
+      <Onboarding open={showOnboarding && isAuthenticated} onClose={() => setShowOnboarding(false)} />
+      
+      
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -147,15 +172,15 @@ function App() {
 
         <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
           {/* Header */}
-          <Box 
+          <Paper
+            elevation={8}
             sx={{ 
-              mb: 4, 
+              mb: { xs: 2, md: 4 },
               textAlign: 'center', 
               position: 'relative',
-              background: 'rgba(255,255,255,0.95)',
               backdropFilter: 'blur(10px)',
               borderRadius: 4,
-              p: 3,
+              p: { xs: 2, md: 3 },
               boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
             }}
           >
@@ -164,70 +189,97 @@ function App() {
             </Box>
             
             <Typography
-              variant="h4"
+              variant={isMobile ? 'h5' : 'h4'}
               sx={{
                 fontWeight: 'bold',
-                color: '#333',
+                color: 'text.primary',
                 mb: 1,
               }}
             >
               Welcome back, {currentUser}! 👋
             </Typography>
             <Typography 
-              variant="h6" 
+              variant={isMobile ? 'body1' : 'h6'}
               sx={{ 
                 color: '#667eea',
                 fontWeight: 500,
                 mb: 2,
+                px: { xs: 1, md: 0 },
               }}
             >
               {hollaMessage}
             </Typography>
             
-            {/* Logout Button */}
-            <Button
-              variant="outlined"
-              startIcon={<LogoutIcon />}
-              onClick={handleLogout}
-              sx={{
-                position: 'absolute',
-                right: 16,
-                top: 16,
-                borderRadius: 3,
-                textTransform: 'none',
-                borderColor: '#667eea',
-                color: '#667eea',
-                fontWeight: 600,
-                '&:hover': {
-                  borderColor: '#764ba2',
-                  background: 'rgba(102,126,234,0.1)',
-                  transform: 'translateY(-2px)',
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              Logout
-            </Button>
-          </Box>
+            {/* Dark Mode & Logout Buttons */}
+            <Box sx={{ 
+              position: { xs: 'relative', md: 'absolute' },
+              right: { md: 16 },
+              top: { md: 16 },
+              display: 'flex', 
+              gap: 1,
+              justifyContent: 'center',
+              mt: { xs: 2, md: 0 },
+            }}>
+              <Tooltip title={darkMode ? 'Light Mode' : 'Dark Mode'}>
+                <IconButton 
+                  onClick={toggleDarkMode}
+                  aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                  sx={{
+                    color: '#667eea',
+                    '&:hover': {
+                      background: 'rgba(102,126,234,0.1)',
+                    },
+                  }}
+                >
+                  {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+                </IconButton>
+              </Tooltip>
+              <Button
+                variant="outlined"
+                startIcon={!isMobile && <LogoutIcon />}
+                onClick={handleLogout}
+                aria-label="Logout"
+                sx={{
+                  borderRadius: 3,
+                  textTransform: 'none',
+                  borderColor: '#667eea',
+                  color: '#667eea',
+                  fontWeight: 600,
+                  '&:hover': {
+                    borderColor: '#764ba2',
+                    background: 'rgba(102,126,234,0.1)',
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                {isMobile ? <LogoutIcon /> : 'Logout'}
+              </Button>
+            </Box>
+          </Paper>
           
           {/* Main Content Grid */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 } }}>
             {/* Habit Checkbox */}
             <HabitCheckbox onProgressUpdate={handleProgressUpdate} userName={currentUser} />
             
-            {/* Daily Memories */}
-            <MemoryLogger userName={currentUser} />
-            
-            {/* Progress Graph */}
-            <ProgressGraph userName={currentUser} />
+            {/* Memory Logger and Progress Graph - Stack on mobile, side by side on desktop */}
+            <Box sx={{ 
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' },
+              gap: { xs: 2, md: 3 },
+            }}>
+              <MemoryLogger userName={currentUser} />
+              <ProgressGraph userName={currentUser} />
+            </Box>
           </Box>
 
           {/* Footer */}
-          <Box 
+          <Paper
+            elevation={2}
             sx={{ 
-              mt: 4, 
+              mt: { xs: 3, md: 4 },
               textAlign: 'center',
-              background: 'rgba(255,255,255,0.95)',
               backdropFilter: 'blur(10px)',
               borderRadius: 3,
               p: 2,
@@ -239,6 +291,7 @@ function App() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener"
+                aria-label="View on GitHub"
                 sx={{ 
                   display: 'inline-flex', 
                   alignItems: 'center', 
@@ -254,7 +307,7 @@ function App() {
                 View on GitHub
               </Link>
             </Typography>
-          </Box>
+          </Paper>
         </Container>
       </Box>
     </ThemeProvider>
