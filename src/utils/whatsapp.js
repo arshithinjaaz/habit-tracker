@@ -5,12 +5,12 @@
 
 export const sendMemoryToWhatsApp = (memory, userName, phoneNumber) => {
   if (!phoneNumber) {
-    alert('⚠️ Please add your WhatsApp number in settings first!');
-    return;
+    return { success: false, error: 'Please add your WhatsApp number in settings first!' };
   }
 
-  // Format phone number (remove all non-digit characters except +)
-  const cleanPhone = phoneNumber.replace(/[^\d+]/g, '');
+  // Format phone number (only allow + at the beginning, remove all non-digits elsewhere)
+  const hasPlus = phoneNumber.trim().startsWith('+');
+  const cleanPhone = (hasPlus ? '+' : '') + phoneNumber.replace(/[^\d]/g, '');
   
   // Format the date nicely
   const date = new Date(memory.date);
@@ -39,6 +39,8 @@ ${memory.text}
   
   // Open WhatsApp in new window/tab
   window.open(whatsappUrl, '_blank');
+  
+  return { success: true };
 };
 
 export const getWhatsAppSettings = () => {
@@ -54,5 +56,7 @@ export const updateWhatsAppSettings = (phoneNumber, enabled) => {
     localStorage.setItem('whatsappEnabled', 'true');
   } else {
     localStorage.setItem('whatsappEnabled', 'false');
+    // Clear the stored number when disabled
+    localStorage.removeItem('whatsappNumber');
   }
 };

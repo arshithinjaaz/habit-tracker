@@ -48,8 +48,7 @@ const MemoryLogger = ({ userName }) => {
   const [sendToWhatsApp, setSendToWhatsApp] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
-  
-  const whatsappSettings = getWhatsAppSettings();
+  const [whatsappSettings, setWhatsappSettings] = useState(getWhatsAppSettings());
   const [tempPhone, setTempPhone] = useState(whatsappSettings.phoneNumber);
   const [tempEnabled, setTempEnabled] = useState(whatsappSettings.enabled);
 
@@ -107,7 +106,10 @@ const MemoryLogger = ({ userName }) => {
       
       // Send to WhatsApp if enabled
       if (sendToWhatsApp && whatsappSettings.enabled) {
-        sendMemoryToWhatsApp(memory, userName, whatsappSettings.phoneNumber);
+        const result = sendMemoryToWhatsApp(memory, userName, whatsappSettings.phoneNumber);
+        if (!result.success) {
+          alert(`⚠️ ${result.error}`);
+        }
       }
       
       setNewMemory('');
@@ -136,8 +138,15 @@ const MemoryLogger = ({ userName }) => {
 
   const handleSaveSettings = () => {
     updateWhatsAppSettings(tempPhone, tempEnabled);
+    setWhatsappSettings(getWhatsAppSettings());
     setSettingsOpen(false);
-    window.location.reload(); // Reload to refresh settings
+  };
+
+  const handleOpenSettings = () => {
+    const currentSettings = getWhatsAppSettings();
+    setTempPhone(currentSettings.phoneNumber);
+    setTempEnabled(currentSettings.enabled);
+    setSettingsOpen(true);
   };
 
   return (
@@ -210,7 +219,7 @@ const MemoryLogger = ({ userName }) => {
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
             <Button
               startIcon={<SettingsIcon />}
-              onClick={() => setSettingsOpen(true)}
+              onClick={handleOpenSettings}
               variant="outlined"
               size="small"
             >
