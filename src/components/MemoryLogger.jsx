@@ -82,7 +82,7 @@ const MemoryLogger = ({ userName }) => {
       const memory = {
         id: Date.now(),
         text: newMemory,
-        date: new Date().toLocaleDateString(),
+        date: new Date().toISOString(),
         timestamp: new Date().toLocaleTimeString(),
       };
       const updatedMemories = [memory, ...memories];
@@ -365,7 +365,7 @@ const MemoryLogger = ({ userName }) => {
                                       <Box display="flex" gap={1} alignItems="center">
                                         <Chip
                                           icon={<TodayIcon />}
-                                          label={memory.date}
+                                          label={new Date(memory.date).toLocaleDateString()}
                                           size="small"
                                           color="primary"
                                           variant="outlined"
