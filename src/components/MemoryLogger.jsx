@@ -231,7 +231,6 @@ const MemoryLogger = ({ userName }) => {
               onClick={handleOpenSettings}
               variant="outlined"
               size="small"
-              fullWidth={false}
               sx={{ 
                 minHeight: { xs: 44, sm: 'auto' },
                 flex: { xs: 1, sm: '0 1 auto' }
@@ -244,7 +243,6 @@ const MemoryLogger = ({ userName }) => {
               onClick={handleExport}
               variant="outlined"
               size="small"
-              fullWidth={false}
               disabled={memories.length === 0}
               sx={{ 
                 minHeight: { xs: 44, sm: 'auto' },
