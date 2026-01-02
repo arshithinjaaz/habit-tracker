@@ -10,6 +10,9 @@ const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_x
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_xxxxxxx';
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'xxxxxxxxxxxxxxx';
 
+// Email subject constant
+const EMAIL_SUBJECT_PREFIX = '🤞 Habit Tracker Memory';
+
 export const sendMemoryToEmail = async (memory, userName, recipientEmail) => {
   if (!recipientEmail) {
     return { 
@@ -45,7 +48,7 @@ export const sendMemoryToEmail = async (memory, userName, recipientEmail) => {
       memory_date: formattedDate,
       memory_time: memory.timestamp,
       memory_text: memory.text,
-      subject: `🤞 Habit Tracker Memory - ${formattedDate}`,
+      subject: `${EMAIL_SUBJECT_PREFIX} - ${formattedDate}`,
     };
 
     // Send email via EmailJS

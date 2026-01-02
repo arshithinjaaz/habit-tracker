@@ -49,11 +49,14 @@ const MemoryLogger = ({ userName }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
-  const [emailSettings, setEmailSettings] = useState(() => getEmailSettings());
-  const [sendToEmail, setSendToEmail] = useState(() => getEmailSettings().enabled); // Auto-enabled when email is set
+  
+  // Initialize email settings once
+  const initialEmailSettings = getEmailSettings();
+  const [emailSettings, setEmailSettings] = useState(initialEmailSettings);
+  const [sendToEmail, setSendToEmail] = useState(initialEmailSettings.enabled); // Auto-enabled when email is set
   const [sendingEmail, setSendingEmail] = useState(false);
-  const [tempEmail, setTempEmail] = useState(() => getEmailSettings().emailAddress);
-  const [tempEnabled, setTempEnabled] = useState(() => getEmailSettings().enabled);
+  const [tempEmail, setTempEmail] = useState(initialEmailSettings.emailAddress);
+  const [tempEnabled, setTempEnabled] = useState(initialEmailSettings.enabled);
 
   const MotionDiv = motion.div;
 
