@@ -1,11 +1,19 @@
 import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button, IconButton, Tooltip, useMediaQuery, Paper } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import WelcomeScreen from './components/WelcomeScreen';
 import MemoryLogger from './components/MemoryLogger';
 import ProgressGraph from './components/ProgressGraph';
 import HollaCharacter from './components/HollaCharacter';
 import HabitCheckbox from './components/HabitCheckbox';
 import Onboarding from './components/Onboarding';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminLayout from './components/admin/AdminLayout';
+import AdminDashboard from './components/admin/AdminDashboard';
+import AdminMemories from './components/admin/AdminMemories';
+import AdminHabits from './components/admin/AdminHabits';
+import AdminSettings from './components/admin/AdminSettings';
+import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -54,7 +62,7 @@ const getTheme = (mode) => createTheme({
   },
 });
 
-function App() {
+function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginMode, setLoginMode] = useState('initial');
@@ -137,13 +145,12 @@ function App() {
     );
   }
 
-      {/* Onboarding Tutorial */}
-      <Onboarding open={showOnboarding && isAuthenticated} onClose={() => setShowOnboarding(false)} />
-      
-      
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/* Onboarding Tutorial */}
+      <Onboarding open={showOnboarding && isAuthenticated} onClose={() => setShowOnboarding(false)} />
+      
       <Box 
         sx={{ 
           minHeight: '100vh', 
@@ -311,6 +318,47 @@ function App() {
         </Container>
       </Box>
     </ThemeProvider>
+  );
+}
+
+function App() {
+  const [darkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+
+  return (
+    <Router>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes>
+          {/* Main App Route */}
+          <Route path="/" element={<MainApp />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }
+          >
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="memories" element={<AdminMemories />} />
+            <Route path="habits" element={<AdminHabits />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+          </Route>
+          
+          {/* Catch all - redirect to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </ThemeProvider>
+    </Router>
   );
 }
 
