@@ -220,17 +220,22 @@ const MemoryLogger = ({ userName }) => {
           boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
         }}
       >
-        <Box display="flex" alignItems="center" gap={1} mb={3}>
+        <Box display="flex" alignItems="center" gap={1} mb={3} flexWrap="wrap">
           <NoteAddIcon color="primary" sx={{ fontSize: 32 }} />
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h5" fontWeight="bold" sx={{ flex: { xs: '1 1 100%', sm: '0 1 auto' } }}>
             Daily Memories
           </Typography>
-          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ ml: { xs: 0, sm: 'auto' }, display: 'flex', alignItems: 'center', gap: 1, width: { xs: '100%', sm: 'auto' } }}>
             <Button
               startIcon={<SettingsIcon />}
               onClick={handleOpenSettings}
               variant="outlined"
               size="small"
+              fullWidth={false}
+              sx={{ 
+                minHeight: { xs: 44, sm: 'auto' },
+                flex: { xs: 1, sm: '0 1 auto' }
+              }}
             >
               Email
             </Button>
@@ -239,7 +244,12 @@ const MemoryLogger = ({ userName }) => {
               onClick={handleExport}
               variant="outlined"
               size="small"
+              fullWidth={false}
               disabled={memories.length === 0}
+              sx={{ 
+                minHeight: { xs: 44, sm: 'auto' },
+                flex: { xs: 1, sm: '0 1 auto' }
+              }}
             >
               Export
             </Button>
@@ -260,7 +270,12 @@ const MemoryLogger = ({ userName }) => {
               </InputAdornment>
             ),
           }}
-          sx={{ mb: 2 }}
+          sx={{ 
+            mb: 2,
+            '& input': {
+              fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+            }
+          }}
         />
 
         <Box mb={3}>
@@ -274,7 +289,12 @@ const MemoryLogger = ({ userName }) => {
             onChange={(e) => setNewMemory(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Write about your day, feelings, or achievements..."
-            sx={{ mb: 2 }}
+            sx={{ 
+              mb: 2,
+              '& textarea': {
+                fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+              }
+            }}
             inputProps={{
               'aria-label': 'Memory text input',
             }}
@@ -316,6 +336,11 @@ const MemoryLogger = ({ userName }) => {
             disabled={!newMemory.trim() || sendingEmail}
             startIcon={sendingEmail ? <CircularProgress size={20} color="inherit" /> : <NoteAddIcon />}
             aria-label="Add memory"
+            sx={{
+              minHeight: { xs: 48, sm: 44 },
+              fontSize: { xs: '16px', sm: '15px' },
+              py: { xs: 1.5, sm: 1.25 }
+            }}
           >
             {sendingEmail ? 'Sending Email...' : 'Add Memory'}
           </Button>
@@ -513,7 +538,18 @@ const MemoryLogger = ({ userName }) => {
       </Paper>
 
       {/* Email Settings Dialog */}
-      <Dialog open={settingsOpen} onClose={() => setSettingsOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog 
+        open={settingsOpen} 
+        onClose={() => setSettingsOpen(false)} 
+        maxWidth="sm" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            mx: { xs: 2, sm: 3 },
+            width: { xs: 'calc(100% - 32px)', sm: '100%' }
+          }
+        }}
+      >
         <DialogTitle>
           <Box display="flex" alignItems="center" gap={1}>
             <EmailIcon sx={{ color: '#1976d2' }} />
@@ -529,7 +565,13 @@ const MemoryLogger = ({ userName }) => {
             value={tempEmail}
             onChange={(e) => setTempEmail(e.target.value)}
             helperText="Receive automatic memory backups via email"
-            sx={{ mt: 2, mb: 2 }}
+            sx={{ 
+              mt: 2, 
+              mb: 2,
+              '& input': {
+                fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+              }
+            }}
             InputProps={{
               startAdornment: <span style={{ marginRight: 8 }}>📧</span>
             }}
@@ -553,9 +595,9 @@ const MemoryLogger = ({ userName }) => {
             When enabled, you can choose to send each memory to your email address as a backup.
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSettingsOpen(false)}>Cancel</Button>
-          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#1976d2' }}>
+        <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
+          <Button onClick={() => setSettingsOpen(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
+          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#1976d2', minHeight: { xs: 44, sm: 'auto' } }}>
             Save
           </Button>
         </DialogActions>

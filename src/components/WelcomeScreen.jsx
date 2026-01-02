@@ -186,9 +186,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             borderRadius: 4,
-            p: { xs: 3, sm: 5 },
-            minWidth: { xs: 300, sm: 400 },
-            maxWidth: 450,
+            p: { xs: 2, sm: 3, md: 5 },
+            width: { xs: '90%', sm: 400 },
+            maxWidth: { xs: '100%', sm: 450 },
+            mx: { xs: 2, sm: 0 },
             boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
             position: 'relative',
           }}
@@ -259,6 +260,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     sx={{
                       mb: 1,
                       fontWeight: 700,
+                      fontSize: { xs: '1.75rem', sm: '2.125rem' },
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
@@ -285,8 +287,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     startIcon={<PersonAddIcon />}
                     onClick={() => handleUserTypeSelection(false)}
                     sx={{
-                      py: 2,
-                      fontSize: '1rem',
+                      py: { xs: 1.5, sm: 2 },
+                      minHeight: { xs: 48, sm: 44 },
+                      fontSize: { xs: '16px', sm: '1rem' },
                       fontWeight: 600,
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       boxShadow: '0 4px 15px rgba(102,126,234,0.4)',
@@ -305,8 +308,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     startIcon={<LoginIcon />}
                     onClick={() => handleUserTypeSelection(true)}
                     sx={{
-                      py: 2,
-                      fontSize: '1rem',
+                      py: { xs: 1.5, sm: 2 },
+                      minHeight: { xs: 48, sm: 44 },
+                      fontSize: { xs: '16px', sm: '1rem' },
                       fontWeight: 600,
                       borderColor: '#667eea',
                       color: '#667eea',
@@ -375,6 +379,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   autoFocus
                   sx={{
                     mb: 3,
+                    '& input': {
+                      fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+                    },
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
@@ -404,6 +411,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       }}
                       sx={{
                         mb: 2,
+                        '& input': {
+                          fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+                        },
                         '& .MuiOutlinedInput-root': {
                           borderRadius: 2,
                           '&:hover fieldset': {
@@ -431,7 +441,12 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                         />
                       }
                       label="📨 Enable email memory backup"
-                      sx={{ mb: 2 }}
+                      sx={{ 
+                        mb: 2,
+                        '& .MuiTypography-root': {
+                          fontSize: { xs: '14px', sm: '16px' }
+                        }
+                      }}
                     />
                   </>
                 )}
@@ -443,8 +458,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   onClick={handleNameSubmit}
                   disabled={!name.trim()}
                   sx={{
-                    py: 1.5,
-                    fontSize: '1rem',
+                    py: { xs: 1.5, sm: 1.5 },
+                    minHeight: { xs: 48, sm: 44 },
+                    fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     '&:hover': {
@@ -539,8 +555,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   onClick={handlePinSubmit}
                   disabled={pin.length !== 4}
                   sx={{
-                    py: 1.5,
-                    fontSize: '1rem',
+                    py: { xs: 1.5, sm: 1.5 },
+                    minHeight: { xs: 48, sm: 44 },
+                    fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     '&:hover': {
@@ -635,8 +652,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   onClick={handleConfirmPinSubmit}
                   disabled={confirmPin.length !== 4}
                   sx={{
-                    py: 1.5,
-                    fontSize: '1rem',
+                    py: { xs: 1.5, sm: 1.5 },
+                    minHeight: { xs: 48, sm: 44 },
+                    fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     '&:hover': {

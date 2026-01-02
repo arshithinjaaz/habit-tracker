@@ -365,6 +365,8 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                   sx={{
                     borderRadius: 2,
                     mb: 1,
+                    p: { xs: 2, sm: 1 },
+                    minHeight: { xs: 60, sm: 'auto' },
                     background: habit.completed ? '#f1f8f4' : 'transparent',
                     border: habit.completed ? '2px solid #4CAF50' : '2px solid #f0f0f0',
                     transition: 'all 0.3s ease',
@@ -381,6 +383,7 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                           setEditingHabit(habit);
                           setOpenEditDialog(true);
                         }}
+                        sx={{ minWidth: { xs: 44, sm: 'auto' }, minHeight: { xs: 44, sm: 'auto' } }}
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -388,6 +391,7 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                         size="small" 
                         onClick={() => handleDeleteHabit(habit.id)}
                         color="error"
+                        sx={{ minWidth: { xs: 44, sm: 'auto' }, minHeight: { xs: 44, sm: 'auto' } }}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -467,7 +471,18 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
       </Paper>
 
       {/* Add Habit Dialog */}
-      <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog 
+        open={openAddDialog} 
+        onClose={() => setOpenAddDialog(false)} 
+        maxWidth="sm" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            mx: { xs: 2, sm: 3 },
+            width: { xs: 'calc(100% - 32px)', sm: '100%' }
+          }
+        }}
+      >
         <DialogTitle>Add New Habit</DialogTitle>
         <DialogContent>
           <TextField
@@ -478,6 +493,11 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             value={newHabit.label}
             onChange={(e) => setNewHabit({ ...newHabit, label: e.target.value })}
             placeholder="e.g., 🏋️ Workout for 30 minutes"
+            sx={{
+              '& input': {
+                fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+              }
+            }}
           />
           <FormControl fullWidth margin="dense">
             <InputLabel>Category</InputLabel>
@@ -494,14 +514,25 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             </Select>
           </FormControl>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenAddDialog(false)}>Cancel</Button>
-          <Button onClick={handleAddHabit} variant="contained">Add</Button>
+        <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
+          <Button onClick={() => setOpenAddDialog(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
+          <Button onClick={handleAddHabit} variant="contained" sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Add</Button>
         </DialogActions>
       </Dialog>
 
       {/* Edit Habit Dialog */}
-      <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog 
+        open={openEditDialog} 
+        onClose={() => setOpenEditDialog(false)} 
+        maxWidth="sm" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            mx: { xs: 2, sm: 3 },
+            width: { xs: 'calc(100% - 32px)', sm: '100%' }
+          }
+        }}
+      >
         <DialogTitle>Edit Habit</DialogTitle>
         <DialogContent>
           {editingHabit && (
@@ -513,6 +544,11 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                 fullWidth
                 value={editingHabit.label}
                 onChange={(e) => setEditingHabit({ ...editingHabit, label: e.target.value })}
+                sx={{
+                  '& input': {
+                    fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
+                  }
+                }}
               />
               <FormControl fullWidth margin="dense">
                 <InputLabel>Category</InputLabel>
@@ -531,9 +567,9 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             </>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenEditDialog(false)}>Cancel</Button>
-          <Button onClick={handleEditHabit} variant="contained">Save</Button>
+        <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
+          <Button onClick={() => setOpenEditDialog(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
+          <Button onClick={handleEditHabit} variant="contained" sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Save</Button>
         </DialogActions>
       </Dialog>
     </motion.div>
