@@ -17,13 +17,22 @@ import {
   Chip,
   Divider,
   Alert,
+  Pagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
 } from '@mui/material';
 import {
   Search as SearchIcon,
   Delete as DeleteIcon,
   FileDownload as FileDownloadIcon,
   CalendarToday as CalendarTodayIcon,
+  FilterList as FilterListIcon,
 } from '@mui/icons-material';
+
+const ITEMS_PER_PAGE = 10;
 
 const AdminMemories = () => {
   const [allMemories, setAllMemories] = useState([]);
@@ -31,15 +40,22 @@ const AdminMemories = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteDialog, setDeleteDialog] = useState({ open: false, memory: null, userKey: null });
   const [successMessage, setSuccessMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedUser, setSelectedUser] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [availableUsers, setAvailableUsers] = useState([]);
 
   const loadAllMemories = () => {
     const allKeys = Object.keys(localStorage);
     const memoryKeys = allKeys.filter((key) => key.startsWith('memories_'));
     
     const memories = [];
+    const users = new Set();
+    
     memoryKeys.forEach((key) => {
       try {
         const userName = key.replace('memories_', '');
+        users.add(userName);
         const userMemories = JSON.parse(localStorage.getItem(key) || '[]');
         userMemories.forEach((memory) => {
           memories.push({
@@ -61,7 +77,7 @@ const AdminMemories = () => {
     });
 
     setAllMemories(memories);
-    setFilteredMemories(memories);
+    setAvailableUsers(Array.from(users).sort());
   };
 
   useEffect(() => {
@@ -69,17 +85,52 @@ const AdminMemories = () => {
   }, []);
 
   useEffect(() => {
+    let filtered = [...allMemories];
+
+    // Apply search filter
     if (searchQuery) {
-      const filtered = allMemories.filter(
+      filtered = filtered.filter(
         (item) =>
           item.memory.text?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.userName.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredMemories(filtered);
-    } else {
-      setFilteredMemories(allMemories);
     }
-  }, [searchQuery, allMemories]);
+
+    // Apply user filter
+    if (selectedUser !== 'all') {
+      filtered = filtered.filter((item) => item.userName === selectedUser);
+    }
+
+    // Apply date filter
+    if (dateFilter !== 'all') {
+      const now = new Date();
+      let filterDate;
+      
+      switch (dateFilter) {
+        case 'today':
+          filterDate = new Date(now.setHours(0, 0, 0, 0));
+          break;
+        case 'week':
+          filterDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'month':
+          filterDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        default:
+          filterDate = null;
+      }
+
+      if (filterDate) {
+        filtered = filtered.filter((item) => {
+          const memoryDate = new Date(item.memory.timestamp || item.memory.date);
+          return memoryDate >= filterDate;
+        });
+      }
+    }
+
+    setFilteredMemories(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [searchQuery, allMemories, selectedUser, dateFilter]);
 
   const handleDeleteMemory = (userKey, memory) => {
     setDeleteDialog({ open: true, memory, userKey });
@@ -132,6 +183,12 @@ const AdminMemories = () => {
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedUser('all');
+    setDateFilter('all');
+  };
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
@@ -141,6 +198,16 @@ const AdminMemories = () => {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  // Pagination
+  const totalPages = Math.ceil(filteredMemories.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedMemories = filteredMemories.slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   return (
@@ -173,39 +240,101 @@ const AdminMemories = () => {
         </Alert>
       )}
 
+      {/* Filters */}
       <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-        <TextField
-          fullWidth
-          placeholder="Search memories by text or username..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <FilterListIcon sx={{ mr: 1, color: 'text.secondary' }} />
+          <Typography variant="h6" fontWeight="bold">
+            Filters
+          </Typography>
+        </Box>
+        
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <TextField
+              fullWidth
+              placeholder="Search memories by text or username..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={3}>
+            <FormControl fullWidth>
+              <InputLabel>User</InputLabel>
+              <Select
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                label="User"
+              >
+                <MenuItem value="all">All Users</MenuItem>
+                {availableUsers.map((user) => (
+                  <MenuItem key={user} value={user}>
+                    {user}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={3}>
+            <FormControl fullWidth>
+              <InputLabel>Time Period</InputLabel>
+              <Select
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                label="Time Period"
+              >
+                <MenuItem value="all">All Time</MenuItem>
+                <MenuItem value="today">Today</MenuItem>
+                <MenuItem value="week">Last 7 Days</MenuItem>
+                <MenuItem value="month">Last 30 Days</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          
+          <Grid item xs={12} md={2}>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={handleResetFilters}
+              sx={{ height: '56px' }}
+            >
+              Reset Filters
+            </Button>
+          </Grid>
+        </Grid>
       </Paper>
 
       <Paper elevation={2}>
         <Box sx={{ p: 2, bgcolor: 'background.default' }}>
           <Typography variant="h6" fontWeight="bold">
-            Total Memories: {filteredMemories.length}
+            {filteredMemories.length} Memories Found
+            {filteredMemories.length !== allMemories.length && ` (of ${allMemories.length} total)`}
           </Typography>
         </Box>
         <Divider />
         <List>
-          {filteredMemories.length === 0 ? (
+          {paginatedMemories.length === 0 ? (
             <ListItem>
               <ListItemText
                 primary="No memories found"
-                secondary="Memories will appear here once users start logging them"
+                secondary={
+                  filteredMemories.length === 0 && allMemories.length > 0
+                    ? 'Try adjusting your filters'
+                    : 'Memories will appear here once users start logging them'
+                }
               />
             </ListItem>
           ) : (
-            filteredMemories.map((item, index) => (
+            paginatedMemories.map((item, index) => (
               <Box key={index}>
                 <ListItem
                   secondaryAction={
@@ -256,11 +385,28 @@ const AdminMemories = () => {
                     }
                   />
                 </ListItem>
-                {index < filteredMemories.length - 1 && <Divider />}
+                {index < paginatedMemories.length - 1 && <Divider />}
               </Box>
             ))
           )}
         </List>
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <>
+            <Divider />
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                showFirstButton
+                showLastButton
+              />
+            </Box>
+          </>
+        )}
       </Paper>
 
       {/* Delete Confirmation Dialog */}

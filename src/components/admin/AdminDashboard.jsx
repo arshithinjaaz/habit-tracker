@@ -16,6 +16,34 @@ import {
   TrendingUp as TrendingUpIcon,
   CalendarToday as CalendarTodayIcon,
 } from '@mui/icons-material';
+import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -25,6 +53,11 @@ const AdminDashboard = () => {
     habitsCompletedToday: 0,
     emailBackupsSent: 0,
     accountAge: 0,
+  });
+  const [chartData, setChartData] = useState({
+    memoryTimeline: { labels: [], data: [] },
+    habitCompletion: { labels: [], data: [] },
+    categoryDistribution: { labels: [], data: [] },
   });
 
   useEffect(() => {
@@ -36,10 +69,19 @@ const AdminDashboard = () => {
     let totalMemories = 0;
     let memoriesThisWeek = 0;
     let memoriesThisMonth = 0;
+    const memoryTimeline = {};
     
     const now = new Date();
     const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    // Initialize last 7 days for timeline
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      const dateKey = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      memoryTimeline[dateKey] = 0;
+    }
 
     memoryKeys.forEach(key => {
       try {
@@ -48,7 +90,13 @@ const AdminDashboard = () => {
         
         memories.forEach(memory => {
           const memoryDate = new Date(memory.timestamp || memory.date);
-          if (memoryDate >= oneWeekAgo) memoriesThisWeek++;
+          if (memoryDate >= oneWeekAgo) {
+            memoriesThisWeek++;
+            const dateKey = memoryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            if (memoryTimeline[dateKey] !== undefined) {
+              memoryTimeline[dateKey]++;
+            }
+          }
           if (memoryDate >= oneMonthAgo) memoriesThisMonth++;
         });
       } catch (error) {
@@ -56,12 +104,57 @@ const AdminDashboard = () => {
       }
     });
 
-    // Count habits completed today
+    // Count habits completed today and gather 7-day habit data
     const today = new Date().toDateString();
-    const habitKeys = allKeys.filter(key => key.includes(`habits_`) && key.includes(today));
+    const habitTimeline = {};
+    const categoryData = {};
+    
+    // Initialize last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      const dateKey = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      habitTimeline[dateKey] = 0;
+    }
+
+    allKeys.forEach(key => {
+      if (key.includes('habits_')) {
+        try {
+          const habits = JSON.parse(localStorage.getItem(key) || '[]');
+          
+          // Extract date from key
+          const keyParts = key.split('_');
+          if (keyParts.length > 2) {
+            const dateString = keyParts.slice(2).join('_');
+            const habitDate = new Date(dateString);
+            
+            if (!isNaN(habitDate.getTime())) {
+              const dateKey = habitDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              
+              habits.forEach(habit => {
+                // Count completed habits
+                if (habit.completed) {
+                  if (habitTimeline[dateKey] !== undefined) {
+                    habitTimeline[dateKey]++;
+                  }
+                  // Count by category
+                  const category = habit.category || 'Other';
+                  categoryData[category] = (categoryData[category] || 0) + 1;
+                }
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing habits:', error);
+        }
+      }
+    });
+
+    // Count habits completed today specifically
+    const todayHabitKeys = allKeys.filter(key => key.includes(`habits_`) && key.includes(today));
     let habitsCompletedToday = 0;
     
-    habitKeys.forEach(key => {
+    todayHabitKeys.forEach(key => {
       try {
         const habits = JSON.parse(localStorage.getItem(key) || '[]');
         habitsCompletedToday += habits.filter(h => h.completed).length;
@@ -114,6 +207,22 @@ const AdminDashboard = () => {
       emailBackupsSent,
       accountAge,
     });
+
+    // Set chart data
+    setChartData({
+      memoryTimeline: {
+        labels: Object.keys(memoryTimeline),
+        data: Object.values(memoryTimeline),
+      },
+      habitCompletion: {
+        labels: Object.keys(habitTimeline),
+        data: Object.values(habitTimeline),
+      },
+      categoryDistribution: {
+        labels: Object.keys(categoryData),
+        data: Object.values(categoryData),
+      },
+    });
   }, []);
 
   const statCards = [
@@ -161,6 +270,67 @@ const AdminDashboard = () => {
     },
   ];
 
+  const memoryChartData = {
+    labels: chartData.memoryTimeline.labels,
+    datasets: [
+      {
+        label: 'Memories Created',
+        data: chartData.memoryTimeline.data,
+        borderColor: '#667eea',
+        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+        fill: true,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const habitChartData = {
+    labels: chartData.habitCompletion.labels,
+    datasets: [
+      {
+        label: 'Habits Completed',
+        data: chartData.habitCompletion.data,
+        backgroundColor: 'rgba(76, 175, 80, 0.8)',
+        borderColor: '#4caf50',
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  const categoryChartData = {
+    labels: chartData.categoryDistribution.labels,
+    datasets: [
+      {
+        data: chartData.categoryDistribution.data,
+        backgroundColor: [
+          'rgba(102, 126, 234, 0.8)',
+          'rgba(76, 175, 80, 0.8)',
+          'rgba(255, 152, 0, 0.8)',
+          'rgba(33, 150, 243, 0.8)',
+          'rgba(156, 39, 176, 0.8)',
+        ],
+        borderColor: [
+          '#667eea',
+          '#4caf50',
+          '#ff9800',
+          '#2196f3',
+          '#9c27b0',
+        ],
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
+
   return (
     <Box>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -170,7 +340,8 @@ const AdminDashboard = () => {
         View statistics and analytics for all users
       </Typography>
 
-      <Grid container spacing={3}>
+      {/* Stats Cards */}
+      <Grid container spacing={3} mb={4}>
         {statCards.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card
@@ -220,7 +391,49 @@ const AdminDashboard = () => {
         ))}
       </Grid>
 
-      <Paper elevation={2} sx={{ p: 3, mt: 4 }}>
+      {/* Charts */}
+      <Grid container spacing={3} mb={4}>
+        {/* Memory Timeline */}
+        <Grid item xs={12} lg={6}>
+          <Paper elevation={2} sx={{ p: 3, height: 400 }}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Memory Creation Timeline (Last 7 Days)
+            </Typography>
+            <Box sx={{ height: 320 }}>
+              <Line data={memoryChartData} options={chartOptions} />
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Habit Completion */}
+        <Grid item xs={12} lg={6}>
+          <Paper elevation={2} sx={{ p: 3, height: 400 }}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Habit Completions (Last 7 Days)
+            </Typography>
+            <Box sx={{ height: 320 }}>
+              <Bar data={habitChartData} options={chartOptions} />
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Category Distribution */}
+        {chartData.categoryDistribution.labels.length > 0 && (
+          <Grid item xs={12} lg={6}>
+            <Paper elevation={2} sx={{ p: 3, height: 400 }}>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Habit Category Distribution
+              </Typography>
+              <Box sx={{ height: 320, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Doughnut data={categoryChartData} options={chartOptions} />
+              </Box>
+            </Paper>
+          </Grid>
+        )}
+      </Grid>
+
+      {/* Recent Activity */}
+      <Paper elevation={2} sx={{ p: 3 }}>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           Recent Activity
         </Typography>

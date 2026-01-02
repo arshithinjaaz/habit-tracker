@@ -7,6 +7,7 @@ import ProgressGraph from './components/ProgressGraph';
 import HollaCharacter from './components/HollaCharacter';
 import HabitCheckbox from './components/HabitCheckbox';
 import Onboarding from './components/Onboarding';
+import QuoteOfTheDay from './components/QuoteOfTheDay';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -267,6 +268,9 @@ function MainApp() {
           
           {/* Main Content Grid */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 } }}>
+            {/* Quote of the Day */}
+            <QuoteOfTheDay />
+            
             {/* Habit Checkbox */}
             <HabitCheckbox onProgressUpdate={handleProgressUpdate} userName={currentUser} />
             
