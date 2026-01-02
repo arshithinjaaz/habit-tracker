@@ -22,8 +22,8 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
   const [currentStep, setCurrentStep] = useState('choice'); // 'choice', 'name', 'pin', 'confirm'
   const [error, setError] = useState('');
   const [isReturningUser, setIsReturningUser] = useState(null);
-  const [whatsappNumber, setWhatsappNumber] = useState('');
-  const [enableWhatsApp, setEnableWhatsApp] = useState(false);
+  const [emailAddress, setEmailAddress] = useState('');
+  const [enableEmail, setEnableEmail] = useState(false);
 
   const handleUserTypeSelection = (isReturning) => {
     setIsReturningUser(isReturning);
@@ -96,10 +96,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
     }
     localStorage.setItem(`habitTracker_pin_${name}`, pin);
     
-    // Save WhatsApp settings if provided
-    if (enableWhatsApp && whatsappNumber.trim()) {
-      localStorage.setItem('whatsappNumber', whatsappNumber);
-      localStorage.setItem('whatsappEnabled', 'true');
+    // Save Email settings if provided
+    if (enableEmail && emailAddress.trim()) {
+      localStorage.setItem('emailAddress', emailAddress);
+      localStorage.setItem('emailEnabled', 'true');
     }
     
     onLoginSuccess(name);
@@ -393,13 +393,14 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     <TextField
                       fullWidth
                       variant="outlined"
-                      label="WhatsApp Number (Optional)"
-                      placeholder="+1 234 567 8900"
-                      value={whatsappNumber}
-                      onChange={(e) => setWhatsappNumber(e.target.value)}
-                      helperText="Include country code (e.g., +91 for India, +1 for USA)"
+                      label="Email Address (Optional)"
+                      type="email"
+                      placeholder="your@example.com"
+                      value={emailAddress}
+                      onChange={(e) => setEmailAddress(e.target.value)}
+                      helperText="Receive automatic memory backups via email"
                       InputProps={{
-                        startAdornment: <span style={{ marginRight: 8 }}>📱</span>
+                        startAdornment: <span style={{ marginRight: 8 }}>📧</span>
                       }}
                       sx={{
                         mb: 2,
@@ -419,8 +420,8 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={enableWhatsApp}
-                          onChange={(e) => setEnableWhatsApp(e.target.checked)}
+                          checked={enableEmail}
+                          onChange={(e) => setEnableEmail(e.target.checked)}
                           sx={{
                             color: '#667eea',
                             '&.Mui-checked': {
@@ -429,7 +430,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                           }}
                         />
                       }
-                      label="📲 Enable WhatsApp memory backup"
+                      label="📨 Enable email memory backup"
                       sx={{ mb: 2 }}
                     />
                   </>

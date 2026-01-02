@@ -33,9 +33,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import EmailIcon from '@mui/icons-material/Email';
+import SendIcon from '@mui/icons-material/Send';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { sendMemoryToWhatsApp, getWhatsAppSettings, updateWhatsAppSettings } from '../utils/whatsapp';
+import { sendMemoryToEmail, getEmailSettings, updateEmailSettings } from '../utils/email';
+import { CircularProgress } from '@mui/material';
 
 const MemoryLogger = ({ userName }) => {
   const [memories, setMemories] = useState(() => {
@@ -45,12 +47,16 @@ const MemoryLogger = ({ userName }) => {
   const [newMemory, setNewMemory] = useState('');
   const [expandedFolders, setExpandedFolders] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
-  const [sendToWhatsApp, setSendToWhatsApp] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
-  const [whatsappSettings, setWhatsappSettings] = useState(getWhatsAppSettings());
-  const [tempPhone, setTempPhone] = useState(whatsappSettings.phoneNumber);
-  const [tempEnabled, setTempEnabled] = useState(whatsappSettings.enabled);
+  
+  // Initialize email settings once
+  const initialEmailSettings = getEmailSettings();
+  const [emailSettings, setEmailSettings] = useState(initialEmailSettings);
+  const [sendToEmail, setSendToEmail] = useState(initialEmailSettings.enabled); // Auto-enabled when email is set
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [tempEmail, setTempEmail] = useState(initialEmailSettings.emailAddress);
+  const [tempEnabled, setTempEnabled] = useState(initialEmailSettings.enabled);
 
   const MotionDiv = motion.div;
 
@@ -90,7 +96,7 @@ const MemoryLogger = ({ userName }) => {
     URL.revokeObjectURL(url);
   };
 
-  const handleAddMemory = () => {
+  const handleAddMemory = async () => {
     if (newMemory.trim()) {
       const now = new Date();
       const memory = {
@@ -104,16 +110,19 @@ const MemoryLogger = ({ userName }) => {
       setMemories(updatedMemories);
       localStorage.setItem(`memories_${userName}`, JSON.stringify(updatedMemories));
       
-      // Send to WhatsApp if enabled
-      if (sendToWhatsApp && whatsappSettings.enabled) {
-        const result = sendMemoryToWhatsApp(memory, userName, whatsappSettings.phoneNumber);
+      // Send email automatically if enabled
+      if (emailSettings.enabled && sendToEmail) {
+        setSendingEmail(true);
+        const result = await sendMemoryToEmail(memory, userName, emailSettings.emailAddress);
+        setSendingEmail(false);
+        
         if (!result.success) {
           alert(`⚠️ ${result.error}`);
         }
       }
       
       setNewMemory('');
-      setSendToWhatsApp(false);
+      setSendToEmail(emailSettings.enabled); // Keep enabled for next memory
       setShowSuccessAnimation(true);
       setTimeout(() => setShowSuccessAnimation(false), 2000);
 
@@ -137,14 +146,14 @@ const MemoryLogger = ({ userName }) => {
   };
 
   const handleSaveSettings = () => {
-    updateWhatsAppSettings(tempPhone, tempEnabled);
-    setWhatsappSettings(getWhatsAppSettings());
+    updateEmailSettings(tempEmail, tempEnabled);
+    setEmailSettings(getEmailSettings());
     setSettingsOpen(false);
   };
 
   const handleOpenSettings = () => {
-    const currentSettings = getWhatsAppSettings();
-    setTempPhone(currentSettings.phoneNumber);
+    const currentSettings = getEmailSettings();
+    setTempEmail(currentSettings.emailAddress);
     setTempEnabled(currentSettings.enabled);
     setSettingsOpen(true);
   };
@@ -223,7 +232,7 @@ const MemoryLogger = ({ userName }) => {
               variant="outlined"
               size="small"
             >
-              WhatsApp
+              Email
             </Button>
             <Button
               startIcon={<FileDownloadIcon />}
@@ -270,27 +279,27 @@ const MemoryLogger = ({ userName }) => {
               'aria-label': 'Memory text input',
             }}
           />
-          {whatsappSettings.enabled && (
+          {emailSettings.enabled && (
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={sendToWhatsApp}
-                  onChange={(e) => setSendToWhatsApp(e.target.checked)}
-                  icon={<WhatsAppIcon />}
-                  checkedIcon={<WhatsAppIcon />}
+                  checked={sendToEmail}
+                  onChange={(e) => setSendToEmail(e.target.checked)}
+                  icon={<EmailIcon />}
+                  checkedIcon={<EmailIcon />}
                   sx={{
-                    color: '#25D366',
+                    color: '#1976d2',
                     '&.Mui-checked': {
-                      color: '#25D366',
+                      color: '#1976d2',
                     },
                   }}
                 />
               }
               label={
                 <Box display="flex" alignItems="center" gap={1}>
-                  <Typography variant="body2">Send to WhatsApp</Typography>
+                  <Typography variant="body2">Send to Email</Typography>
                   <Chip
-                    label={whatsappSettings.phoneNumber}
+                    label={emailSettings.emailAddress}
                     size="small"
                     sx={{ fontSize: '0.7rem' }}
                   />
@@ -304,11 +313,11 @@ const MemoryLogger = ({ userName }) => {
             color="primary"
             fullWidth
             onClick={handleAddMemory}
-            disabled={!newMemory.trim()}
-            startIcon={<NoteAddIcon />}
+            disabled={!newMemory.trim() || sendingEmail}
+            startIcon={sendingEmail ? <CircularProgress size={20} color="inherit" /> : <NoteAddIcon />}
             aria-label="Add memory"
           >
-            Add Memory
+            {sendingEmail ? 'Sending Email...' : 'Add Memory'}
           </Button>
         </Box>
 
@@ -503,25 +512,26 @@ const MemoryLogger = ({ userName }) => {
         </Box>
       </Paper>
 
-      {/* WhatsApp Settings Dialog */}
+      {/* Email Settings Dialog */}
       <Dialog open={settingsOpen} onClose={() => setSettingsOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Box display="flex" alignItems="center" gap={1}>
-            <WhatsAppIcon sx={{ color: '#25D366' }} />
-            <Typography variant="h6">WhatsApp Settings</Typography>
+            <EmailIcon sx={{ color: '#1976d2' }} />
+            <Typography variant="h6">Email Settings</Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            label="WhatsApp Number"
-            placeholder="+1 234 567 8900"
-            value={tempPhone}
-            onChange={(e) => setTempPhone(e.target.value)}
-            helperText="Include country code (e.g., +91 for India, +1 for USA)"
+            label="Email Address"
+            type="email"
+            placeholder="your@example.com"
+            value={tempEmail}
+            onChange={(e) => setTempEmail(e.target.value)}
+            helperText="Receive automatic memory backups via email"
             sx={{ mt: 2, mb: 2 }}
             InputProps={{
-              startAdornment: <span style={{ marginRight: 8 }}>📱</span>
+              startAdornment: <span style={{ marginRight: 8 }}>📧</span>
             }}
           />
           <FormControlLabel
@@ -530,22 +540,22 @@ const MemoryLogger = ({ userName }) => {
                 checked={tempEnabled}
                 onChange={(e) => setTempEnabled(e.target.checked)}
                 sx={{
-                  color: '#25D366',
+                  color: '#1976d2',
                   '&.Mui-checked': {
-                    color: '#25D366',
+                    color: '#1976d2',
                   },
                 }}
               />
             }
-            label="Enable WhatsApp memory backup"
+            label="Enable email memory backup"
           />
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
-            When enabled, you can choose to send each memory to your WhatsApp number as a backup.
+            When enabled, you can choose to send each memory to your email address as a backup.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSettingsOpen(false)}>Cancel</Button>
-          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#25D366' }}>
+          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#1976d2' }}>
             Save
           </Button>
         </DialogActions>
