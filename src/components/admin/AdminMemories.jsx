@@ -77,6 +77,7 @@ const AdminMemories = () => {
     });
 
     setAllMemories(memories);
+    setFilteredMemories(memories);
     setAvailableUsers(Array.from(users).sort());
   };
 
