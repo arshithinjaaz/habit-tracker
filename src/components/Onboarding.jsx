@@ -22,33 +22,33 @@ const Onboarding = ({ open, onClose }) => {
 
   const steps = [
     {
-      title: 'Welcome to Habit Tracker! 🎉',
-      icon: '👋',
-      description: 'Build better habits, track your progress, and achieve your goals with our intuitive app.',
+      title: 'Welcome to Habit Tracker',
+      icon: <CheckCircleIcon sx={{ fontSize: 64, color: '#ff6347' }} />,
+      description: 'Build better habits, track your progress, and achieve your goals with our minimal and intuitive app.',
     },
     {
       title: 'Track Your Habits',
-      icon: <CheckCircleIcon sx={{ fontSize: 64, color: '#4CAF50' }} />,
+      icon: <CheckCircleIcon sx={{ fontSize: 64, color: '#4caf50' }} />,
       description: 'Check off daily habits, add custom habits, and filter by category. Each completed habit brings you closer to your goals!',
     },
     {
-      title: 'Build Your Streak 🔥',
-      icon: <LocalFireDepartmentIcon sx={{ fontSize: 64, color: '#FF5722' }} />,
+      title: 'Build Your Streak',
+      icon: <LocalFireDepartmentIcon sx={{ fontSize: 64, color: '#ff6347' }} />,
       description: 'Complete all habits daily to build a streak! The longer your streak, the more motivated you\'ll be.',
     },
     {
       title: 'Log Your Memories',
-      icon: <NoteAddIcon sx={{ fontSize: 64, color: '#667eea' }} />,
+      icon: <NoteAddIcon sx={{ fontSize: 64, color: '#ff6347' }} />,
       description: 'Capture daily thoughts, achievements, and reflections. Your memories are organized by month for easy browsing.',
     },
     {
       title: 'Visualize Progress',
-      icon: <TrendingUpIcon sx={{ fontSize: 64, color: '#2196F3' }} />,
+      icon: <TrendingUpIcon sx={{ fontSize: 64, color: '#2196f3' }} />,
       description: 'View charts, weekly summaries, and insights about your habit journey. Export your data anytime!',
     },
     {
-      title: 'You\'re All Set! 🚀',
-      icon: '✨',
+      title: 'You\'re All Set',
+      icon: <CheckCircleIcon sx={{ fontSize: 64, color: '#4caf50' }} />,
       description: 'Start your journey to better habits today. Remember: small steps lead to big changes!',
     },
   ];
@@ -79,8 +79,9 @@ const Onboarding = ({ open, onClose }) => {
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 4,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          borderRadius: 3,
+          background: '#1e1e1e',
+          border: '1px solid #2a2a2a',
         },
       }}
     >
@@ -106,8 +107,9 @@ const Onboarding = ({ open, onClose }) => {
               sx={{
                 p: 4,
                 textAlign: 'center',
-                background: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: 3,
+                background: '#242424',
+                border: '1px solid #2a2a2a',
+                borderRadius: 2,
                 minHeight: 300,
                 display: 'flex',
                 flexDirection: 'column',
@@ -115,18 +117,12 @@ const Onboarding = ({ open, onClose }) => {
               }}
             >
               <Box mb={2}>
-                {typeof steps[activeStep].icon === 'string' ? (
-                  <Typography variant="h1" sx={{ fontSize: 64 }}>
-                    {steps[activeStep].icon}
-                  </Typography>
-                ) : (
-                  steps[activeStep].icon
-                )}
+                {steps[activeStep].icon}
               </Box>
-              <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
+              <Typography variant="h4" fontWeight={600} gutterBottom color="#e0e0e0">
                 {steps[activeStep].title}
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mt: 2, lineHeight: 1.8 }}>
+              <Typography variant="body1" color="#9e9e9e" sx={{ mt: 2, lineHeight: 1.8 }}>
                 {steps[activeStep].description}
               </Typography>
             </Paper>
@@ -135,14 +131,14 @@ const Onboarding = ({ open, onClose }) => {
       </DialogContent>
 
       <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
-        <Button onClick={handleSkip} sx={{ color: 'white' }}>
+        <Button onClick={handleSkip} sx={{ color: '#9e9e9e' }}>
           Skip
         </Button>
         <Box>
           <Button 
             onClick={handleBack} 
             disabled={activeStep === 0}
-            sx={{ color: 'white', mr: 1 }}
+            sx={{ color: '#9e9e9e', mr: 1 }}
           >
             Back
           </Button>
@@ -150,10 +146,10 @@ const Onboarding = ({ open, onClose }) => {
             onClick={handleNext}
             variant="contained"
             sx={{
-              bgcolor: 'white',
-              color: '#667eea',
+              bgcolor: '#ff6347',
+              color: 'white',
               '&:hover': {
-                bgcolor: '#f5f5f5',
+                bgcolor: '#ff7f5e',
               },
             }}
           >

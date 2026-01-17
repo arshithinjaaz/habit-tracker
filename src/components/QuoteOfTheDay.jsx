@@ -153,39 +153,28 @@ const QuoteOfTheDay = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      elevation={3}
+      elevation={0}
       sx={{
         p: 3,
         mb: 3,
         position: 'relative',
         overflow: 'hidden',
-        background: `linear-gradient(135deg, ${getCategoryColor(category)}15 0%, ${getCategoryColor(category)}05 100%)`,
+        background: '#1e1e1e',
+        border: `1px solid ${getCategoryColor(category)}40`,
         borderLeft: `4px solid ${getCategoryColor(category)}`,
       }}
     >
-      {/* Decorative quote icon */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: -10,
-          right: -10,
-          opacity: 0.1,
-          transform: 'rotate(180deg)',
-        }}
-      >
-        <FormatQuoteIcon sx={{ fontSize: 120, color: getCategoryColor(category) }} />
-      </Box>
-
       {/* Category chip */}
       <Box sx={{ mb: 2 }}>
         <Chip
           label={category}
           size="small"
           sx={{
-            bgcolor: getCategoryColor(category),
-            color: 'white',
+            bgcolor: `${getCategoryColor(category)}30`,
+            color: getCategoryColor(category),
             fontWeight: 600,
             fontSize: '0.75rem',
+            border: `1px solid ${getCategoryColor(category)}50`,
           }}
         />
       </Box>
@@ -195,19 +184,10 @@ const QuoteOfTheDay = () => {
         variant="h6"
         sx={{
           fontStyle: 'italic',
-          color: 'text.primary',
+          color: '#e0e0e0',
           lineHeight: 1.6,
           position: 'relative',
           fontWeight: 500,
-          '&::before': {
-            content: '"\u201C"',
-            position: 'absolute',
-            left: -16,
-            top: -8,
-            fontSize: '2rem',
-            color: getCategoryColor(category),
-            opacity: 0.5,
-          },
         }}
       >
         {quote}
@@ -219,7 +199,7 @@ const QuoteOfTheDay = () => {
         sx={{
           display: 'block',
           mt: 2,
-          color: 'text.secondary',
+          color: '#9e9e9e',
           fontStyle: 'italic',
         }}
       >

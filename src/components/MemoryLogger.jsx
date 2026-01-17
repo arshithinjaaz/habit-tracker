@@ -11,7 +11,6 @@ import {
   IconButton,
   Chip,
   Divider,
-  Avatar,
   Collapse,
   InputAdornment,
   Dialog,
@@ -184,25 +183,18 @@ const MemoryLogger = ({ userName }) => {
               elevation={10}
               sx={{
                 p: 4,
-                borderRadius: 4,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
+                borderRadius: 3,
+                background: '#1e1e1e',
+                border: '2px solid #ff6347',
+                color: '#e0e0e0',
                 textAlign: 'center',
                 minWidth: 300,
               }}
             >
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 0.5, repeat: 3 }}
-              >
-                <Typography variant="h3" sx={{ mb: 1 }}>
-                  ✨📝✨
-                </Typography>
-              </motion.div>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="h6" fontWeight={600} color="#ff6347">
                 Memory Saved!
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1, opacity: 0.9 }}>
+              <Typography variant="body2" sx={{ mt: 1, color: '#9e9e9e' }}>
                 Habits reset for a fresh start
               </Typography>
             </Paper>
@@ -211,18 +203,18 @@ const MemoryLogger = ({ userName }) => {
       </AnimatePresence>
 
       <Paper
-        elevation={8}
+        elevation={0}
         sx={{
           p: 3,
           mb: 3,
           borderRadius: 3,
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+          background: '#1e1e1e',
+          border: '1px solid #2a2a2a',
         }}
       >
         <Box display="flex" alignItems="center" gap={1} mb={3} flexWrap="wrap">
-          <NoteAddIcon color="primary" sx={{ fontSize: 32 }} />
-          <Typography variant="h5" fontWeight="bold" sx={{ flex: { xs: '1 1 100%', sm: '0 1 auto' } }}>
+          <NoteAddIcon sx={{ fontSize: 32, color: '#ff6347' }} />
+          <Typography variant="h5" fontWeight={600} color="#e0e0e0" sx={{ flex: { xs: '1 1 100%', sm: '0 1 auto' } }}>
             Daily Memories
           </Typography>
           <Box sx={{ ml: { xs: 0, sm: 'auto' }, display: 'flex', alignItems: 'center', gap: 1, width: { xs: '100%', sm: 'auto' } }}>
@@ -337,15 +329,22 @@ const MemoryLogger = ({ userName }) => {
             sx={{
               minHeight: { xs: 48, sm: 44 },
               fontSize: { xs: '16px', sm: '15px' },
-              py: { xs: 1.5, sm: 1.25 }
+              py: { xs: 1.5, sm: 1.25 },
+              background: '#ff6347',
+              '&:hover': {
+                background: '#ff7f5e',
+              },
+              '&:disabled': {
+                background: '#2a2a2a',
+              },
             }}
           >
             {sendingEmail ? 'Sending Email...' : 'Add Memory'}
           </Button>
         </Box>
 
-        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <AutoAwesomeIcon color="primary" />
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, color: '#e0e0e0' }}>
+          <AutoAwesomeIcon sx={{ color: '#ff6347' }} />
           Recent Memories ({memories.length})
         </Typography>
 
@@ -356,14 +355,13 @@ const MemoryLogger = ({ userName }) => {
               sx={{
                 p: 4,
                 textAlign: 'center',
-                background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                background: '#242424',
+                border: '1px solid #2a2a2a',
                 borderRadius: 2,
               }}
             >
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                📝
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
+              <NoteAddIcon sx={{ fontSize: 48, color: '#9e9e9e', mb: 1 }} />
+              <Typography variant="body1" color="#9e9e9e">
                 No memories yet. Start capturing your precious moments!
               </Typography>
             </Paper>
@@ -379,12 +377,13 @@ const MemoryLogger = ({ userName }) => {
                 >
                   {/* Folder Header */}
                   <Paper
-                    elevation={3}
+                    elevation={0}
                     sx={{
                       mb: 2,
                       borderRadius: 2,
                       overflow: 'hidden',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: '#242424',
+                      border: '1px solid #2a2a2a',
                     }}
                   >
                     <Box
@@ -397,33 +396,33 @@ const MemoryLogger = ({ userName }) => {
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         '&:hover': {
-                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          backgroundColor: 'rgba(255, 99, 71, 0.1)',
                         },
                       }}
                     >
                       <Box display="flex" alignItems="center" gap={1.5}>
                         {expandedFolders[monthYear] ? (
-                          <FolderOpenIcon sx={{ fontSize: 32, color: 'white' }} />
+                          <FolderOpenIcon sx={{ fontSize: 32, color: '#ff6347' }} />
                         ) : (
-                          <FolderIcon sx={{ fontSize: 32, color: 'white' }} />
+                          <FolderIcon sx={{ fontSize: 32, color: '#ff6347' }} />
                         )}
                         <Box>
-                          <Typography variant="h6" fontWeight="bold" sx={{ color: 'white' }}>
+                          <Typography variant="h6" fontWeight={600} sx={{ color: '#e0e0e0' }}>
                             {monthYear}
                           </Typography>
-                          <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                          <Typography variant="caption" sx={{ color: '#9e9e9e' }}>
                             {monthMemories.length} {monthMemories.length === 1 ? 'memory' : 'memories'}
                           </Typography>
                         </Box>
                       </Box>
-                      <IconButton sx={{ color: 'white' }}>
+                      <IconButton sx={{ color: '#9e9e9e' }}>
                         {expandedFolders[monthYear] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                       </IconButton>
                     </Box>
 
                     {/* Folder Contents */}
                     <Collapse in={expandedFolders[monthYear]} timeout="auto" unmountOnExit>
-                      <Box sx={{ bgcolor: 'rgba(255, 255, 255, 0.95)', p: 2 }}>
+                      <Box sx={{ bgcolor: '#1e1e1e', p: 2 }}>
                         {monthMemories.map((memory, index) => (
                           <MotionDiv
                             key={memory.id}
@@ -433,63 +432,56 @@ const MemoryLogger = ({ userName }) => {
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                           >
                             <Paper
-                              elevation={1}
+                              elevation={0}
                               sx={{
                                 mb: 2,
                                 p: 2,
                                 borderRadius: 2,
-                                background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-                                border: '2px solid',
-                                borderColor: 'primary.light',
-                                borderLeftWidth: 6,
+                                background: '#242424',
+                                border: '2px solid #2a2a2a',
+                                borderLeftColor: '#ff6347',
+                                borderLeftWidth: 4,
                                 position: 'relative',
-                                transition: 'all 0.3s ease',
+                                transition: 'all 0.2s ease',
                                 '&:hover': {
                                   transform: 'translateX(4px)',
-                                  boxShadow: 3,
+                                  borderLeftColor: '#ff7f5e',
                                 },
                               }}
                             >
                               <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                                 <Box flex={1}>
                                   <Box display="flex" alignItems="center" gap={1} mb={1}>
-                                    <Avatar
-                                      sx={{
-                                        width: 32,
-                                        height: 32,
-                                        bgcolor: 'primary.main',
-                                        fontSize: '1rem',
-                                      }}
-                                    >
-                                      📖
-                                    </Avatar>
                                     <Box>
                                       <Box display="flex" gap={1} alignItems="center">
                                         <Chip
                                           icon={<TodayIcon />}
                                           label={memory.date}
                                           size="small"
-                                          color="primary"
-                                          variant="outlined"
-                                          sx={{ fontWeight: 600 }}
+                                          sx={{ 
+                                            fontWeight: 600,
+                                            background: 'rgba(255, 99, 71, 0.15)',
+                                            color: '#ff6347',
+                                            border: '1px solid rgba(255, 99, 71, 0.3)',
+                                          }}
                                         />
                                         <Chip
                                           label={memory.timestamp}
                                           size="small"
                                           sx={{
-                                            bgcolor: '#e3f2fd',
-                                            color: '#1976d2',
+                                            bgcolor: '#2a2a2a',
+                                            color: '#9e9e9e',
                                             fontWeight: 600,
                                           }}
                                         />
                                       </Box>
                                     </Box>
                                   </Box>
-                                  <Divider sx={{ my: 1 }} />
+                                  <Divider sx={{ my: 1, borderColor: '#2a2a2a' }} />
                                   <Typography
                                     variant="body1"
                                     sx={{
-                                      color: '#333',
+                                      color: '#e0e0e0',
                                       lineHeight: 1.6,
                                       whiteSpace: 'pre-wrap',
                                       wordBreak: 'break-word',
@@ -502,25 +494,15 @@ const MemoryLogger = ({ userName }) => {
                                   aria-label="delete memory"
                                   onClick={() => handleDeleteMemory(memory.id)}
                                   sx={{
-                                    color: 'error.main',
+                                    color: '#9e9e9e',
                                     '&:hover': {
-                                      bgcolor: 'error.light',
-                                      color: 'white',
+                                      bgcolor: 'rgba(244, 67, 54, 0.1)',
+                                      color: '#f44336',
                                     },
                                   }}
                                 >
                                   <DeleteIcon />
                                 </IconButton>
-                              </Box>
-                              <Box
-                                sx={{
-                                  position: 'absolute',
-                                  bottom: 8,
-                                  right: 8,
-                                  opacity: 0.3,
-                                }}
-                              >
-                                <FavoriteIcon sx={{ fontSize: 16, color: 'primary.main' }} />
                               </Box>
                             </Paper>
                           </MotionDiv>
@@ -544,14 +526,16 @@ const MemoryLogger = ({ userName }) => {
         PaperProps={{
           sx: {
             mx: { xs: 2, sm: 3 },
-            width: { xs: 'calc(100% - 32px)', sm: '100%' }
+            width: { xs: 'calc(100% - 32px)', sm: '100%' },
+            background: '#1e1e1e',
+            border: '1px solid #2a2a2a',
           }
         }}
       >
         <DialogTitle>
           <Box display="flex" alignItems="center" gap={1}>
-            <EmailIcon sx={{ color: '#1976d2' }} />
-            <Typography variant="h6">Email Settings</Typography>
+            <EmailIcon sx={{ color: '#ff6347' }} />
+            <Typography variant="h6" color="#e0e0e0">Email Settings</Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
@@ -567,11 +551,19 @@ const MemoryLogger = ({ userName }) => {
               mt: 2, 
               mb: 2,
               '& input': {
-                fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
-              }
+                fontSize: { xs: '16px', sm: '14px' },
+              },
+              '& .MuiOutlinedInput-root': {
+                '&:hover fieldset': {
+                  borderColor: '#ff6347',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#ff6347',
+                },
+              },
             }}
             InputProps={{
-              startAdornment: <span style={{ marginRight: 8 }}>📧</span>
+              startAdornment: <EmailIcon sx={{ mr: 1, color: '#9e9e9e' }} />
             }}
           />
           <FormControlLabel
@@ -580,22 +572,32 @@ const MemoryLogger = ({ userName }) => {
                 checked={tempEnabled}
                 onChange={(e) => setTempEnabled(e.target.checked)}
                 sx={{
-                  color: '#1976d2',
+                  color: '#9e9e9e',
                   '&.Mui-checked': {
-                    color: '#1976d2',
+                    color: '#ff6347',
                   },
                 }}
               />
             }
             label="Enable email memory backup"
           />
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
+          <Typography variant="caption" color="#9e9e9e" sx={{ display: 'block', mt: 2 }}>
             When enabled, you can choose to send each memory to your email address as a backup.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
-          <Button onClick={() => setSettingsOpen(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
-          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#1976d2', minHeight: { xs: 44, sm: 'auto' } }}>
+          <Button onClick={() => setSettingsOpen(false)} sx={{ minHeight: { xs: 44, sm: 'auto' }, color: '#9e9e9e' }}>Cancel</Button>
+          <Button 
+            onClick={handleSaveSettings} 
+            variant="contained" 
+            sx={{ 
+              bgcolor: '#ff6347', 
+              minHeight: { xs: 44, sm: 'auto' },
+              '&:hover': {
+                bgcolor: '#ff7f5e',
+              },
+            }}
+          >
             Save
           </Button>
         </DialogActions>
