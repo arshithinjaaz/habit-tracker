@@ -326,7 +326,7 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
               backgroundColor: '#e0e0e0',
               '& .MuiLinearProgress-bar': {
                 borderRadius: 5,
-                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(90deg, #ff6347 0%, #ff7f50 100%)',
               },
             }}
           />
@@ -367,11 +367,11 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                     mb: 1,
                     p: { xs: 2, sm: 1 },
                     minHeight: { xs: 60, sm: 'auto' },
-                    background: habit.completed ? '#f1f8f4' : 'transparent',
-                    border: habit.completed ? '2px solid #4CAF50' : '2px solid #f0f0f0',
+                    background: habit.completed ? 'rgba(255, 99, 71, 0.1)' : 'transparent',
+                    border: habit.completed ? '2px solid #ff6347' : '2px solid #3a3a3a',
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      background: habit.completed ? '#e8f5e9' : '#fafafa',
+                      background: habit.completed ? 'rgba(255, 99, 71, 0.2)' : '#242424',
                       transform: 'translateX(4px)',
                     },
                   }}
@@ -406,9 +406,9 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                       icon={<RadioButtonUncheckedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
-                        color: '#bdbdbd',
+                        color: '#9e9e9e',
                         '&.Mui-checked': {
-                          color: '#4CAF50',
+                          color: '#ff6347',
                         },
                       }}
                     />
@@ -456,7 +456,7 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
               sx={{
                 p: 2,
                 mt: 2,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
                 color: 'white',
                 textAlign: 'center',
                 borderRadius: 2,

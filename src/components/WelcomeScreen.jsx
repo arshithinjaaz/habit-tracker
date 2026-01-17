@@ -131,7 +131,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -234,9 +234,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                 position: 'absolute',
                 top: 16,
                 left: 16,
-                color: '#667eea',
+                color: '#ff6347',
                 '&:hover': {
-                  background: 'rgba(102, 126, 234, 0.1)',
+                  background: 'rgba(255, 99, 71, 0.1)',
                 },
               }}
             >
@@ -261,7 +261,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       mb: 1,
                       fontWeight: 700,
                       fontSize: { xs: '1.75rem', sm: '2.125rem' },
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       textAlign: 'center',
@@ -291,10 +291,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       minHeight: { xs: 48, sm: 44 },
                       fontSize: { xs: '16px', sm: '1rem' },
                       fontWeight: 600,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      boxShadow: '0 4px 15px rgba(102,126,234,0.4)',
+                      background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
+                      boxShadow: '0 4px 15px rgba(255, 99, 71, 0.4)',
                       '&:hover': {
-                        boxShadow: '0 6px 20px rgba(102,126,234,0.6)',
+                        boxShadow: '0 6px 20px rgba(255, 99, 71, 0.6)',
                         transform: 'translateY(-2px)',
                       },
                       transition: 'all 0.3s ease',
@@ -312,13 +312,13 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       minHeight: { xs: 48, sm: 44 },
                       fontSize: { xs: '16px', sm: '1rem' },
                       fontWeight: 600,
-                      borderColor: '#667eea',
-                      color: '#667eea',
+                      borderColor: '#ff6347',
+                      color: '#ff6347',
                       borderWidth: 2,
                       '&:hover': {
                         borderWidth: 2,
-                        borderColor: '#764ba2',
-                        background: 'rgba(102,126,234,0.05)',
+                        borderColor: '#ff7f50',
+                        background: 'rgba(255, 99, 71, 0.05)',
                         transform: 'translateY(-2px)',
                       },
                       transition: 'all 0.3s ease',
@@ -385,10 +385,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                         borderWidth: 2,
                       },
                     },
@@ -417,10 +417,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                         '& .MuiOutlinedInput-root': {
                           borderRadius: 2,
                           '&:hover fieldset': {
-                            borderColor: '#667eea',
+                            borderColor: '#ff6347',
                           },
                           '&.Mui-focused fieldset': {
-                            borderColor: '#667eea',
+                            borderColor: '#ff6347',
                             borderWidth: 2,
                           },
                         },
@@ -433,9 +433,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                           checked={enableEmail}
                           onChange={(e) => setEnableEmail(e.target.checked)}
                           sx={{
-                            color: '#667eea',
+                            color: '#ff6347',
                             '&.Mui-checked': {
-                              color: '#667eea',
+                              color: '#ff6347',
                             },
                           }}
                         />
@@ -462,9 +462,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     minHeight: { xs: 48, sm: 44 },
                     fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
                     '&:hover': {
-                      boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
+                      boxShadow: '0 6px 20px rgba(255, 99, 71, 0.4)',
                     },
                     '&:disabled': {
                       background: '#e0e0e0',
@@ -538,10 +538,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                         borderWidth: 2,
                       },
                     },
@@ -559,9 +559,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     minHeight: { xs: 48, sm: 44 },
                     fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
                     '&:hover': {
-                      boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
+                      boxShadow: '0 6px 20px rgba(255, 99, 71, 0.4)',
                     },
                     '&:disabled': {
                       background: '#e0e0e0',
@@ -635,10 +635,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                         borderWidth: 2,
                       },
                     },
@@ -656,9 +656,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     minHeight: { xs: 48, sm: 44 },
                     fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
                     '&:hover': {
-                      boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
+                      boxShadow: '0 6px 20px rgba(255, 99, 71, 0.4)',
                     },
                     '&:disabled': {
                       background: '#e0e0e0',

@@ -24,14 +24,18 @@ const getTheme = (mode) => createTheme({
   palette: {
     mode,
     primary: {
-      main: '#667eea',
+      main: '#ff6347',
     },
     secondary: {
-      main: '#764ba2',
+      main: '#ff7f50',
     },
     background: {
-      default: mode === 'light' ? '#f5f7fa' : '#121212',
-      paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+      default: mode === 'light' ? '#f5f7fa' : '#0f0f0f',
+      paper: mode === 'light' ? '#ffffff' : '#2a2a2a',
+    },
+    text: {
+      primary: mode === 'light' ? '#000000' : '#ffffff',
+      secondary: mode === 'light' ? '#666666' : '#9e9e9e',
     },
   },
   typography: {
@@ -47,7 +51,7 @@ const getTheme = (mode) => createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 12,
           textTransform: 'none',
           fontWeight: 600,
         },
@@ -56,7 +60,7 @@ const getTheme = (mode) => createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: 16,
         },
       },
     },
@@ -72,7 +76,7 @@ function MainApp() {
   const [hollaMessage, setHollaMessage] = useState("Let's build great habits together!");
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
+    return saved ? JSON.parse(saved) : true;
   });
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
@@ -155,7 +159,7 @@ function MainApp() {
       <Box 
         sx={{ 
           minHeight: '100vh', 
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)',
           py: 4,
           position: 'relative',
           overflow: 'hidden',
@@ -209,7 +213,7 @@ function MainApp() {
             <Typography 
               variant={isMobile ? 'body1' : 'h6'}
               sx={{ 
-                color: '#667eea',
+                color: '#ff6347',
                 fontWeight: 500,
                 mb: 2,
                 px: { xs: 1, md: 0 },
@@ -233,9 +237,9 @@ function MainApp() {
                   onClick={toggleDarkMode}
                   aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                   sx={{
-                    color: '#667eea',
+                    color: '#ff6347',
                     '&:hover': {
-                      background: 'rgba(102,126,234,0.1)',
+                      background: 'rgba(255,99,71,0.1)',
                     },
                   }}
                 >
@@ -250,12 +254,12 @@ function MainApp() {
                 sx={{
                   borderRadius: 3,
                   textTransform: 'none',
-                  borderColor: '#667eea',
-                  color: '#667eea',
+                  borderColor: '#ff6347',
+                  color: '#ff6347',
                   fontWeight: 600,
                   '&:hover': {
-                    borderColor: '#764ba2',
-                    background: 'rgba(102,126,234,0.1)',
+                    borderColor: '#ff7f50',
+                    background: 'rgba(255,99,71,0.1)',
                     transform: 'translateY(-2px)',
                   },
                   transition: 'all 0.3s ease',
@@ -307,7 +311,7 @@ function MainApp() {
                   display: 'inline-flex', 
                   alignItems: 'center', 
                   gap: 0.5,
-                  color: '#667eea',
+                  color: '#ff6347',
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'underline',
@@ -328,7 +332,7 @@ function MainApp() {
 function App() {
   const [darkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
+    return saved ? JSON.parse(saved) : true;
   });
 
   const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);

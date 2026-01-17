@@ -38,9 +38,10 @@ const Greeting = () => {
         sx={{
           p: 4,
           mb: 3,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
           color: 'white',
           borderRadius: 3,
+          border: '1px solid #3a3a3a',
         }}
       >
         <Box display="flex" alignItems="center" gap={2} mb={2}>

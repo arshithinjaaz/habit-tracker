@@ -130,8 +130,8 @@ const ProgressGraph = ({ userName }) => {
       {
         label: 'Daily Habit Score (%)',
         data: filteredData.map((d) => d.score),
-        borderColor: 'rgb(102, 126, 234)',
-        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+        borderColor: 'rgb(255, 99, 71)',
+        backgroundColor: 'rgba(255, 99, 71, 0.2)',
         tension: 0.4,
         fill: true,
       },
@@ -172,8 +172,8 @@ const ProgressGraph = ({ userName }) => {
     datasets: [
       {
         data: [avgScore, 100 - avgScore],
-        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(200, 200, 200, 0.3)'],
-        borderColor: ['rgb(102, 126, 234)', 'rgb(200, 200, 200)'],
+        backgroundColor: ['rgba(255, 99, 71, 0.8)', 'rgba(42, 42, 42, 0.3)'],
+        borderColor: ['rgb(255, 99, 71)', 'rgb(58, 58, 58)'],
         borderWidth: 2,
       },
     ],
@@ -216,8 +216,9 @@ const ProgressGraph = ({ userName }) => {
             p: 3,
             mb: 3,
             borderRadius: 3,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
             color: 'white',
+            border: '1px solid #3a3a3a',
           }}
         >
           <Box display="flex" alignItems="center" gap={1} mb={2}>
@@ -341,13 +342,14 @@ const ProgressGraph = ({ userName }) => {
             sx={{
               p: 6,
               textAlign: 'center',
-              background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+              background: 'linear-gradient(135deg, #2a2a2a 0%, #242424 100%)',
               borderRadius: 2,
               minHeight: 300,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              border: '1px solid #3a3a3a',
             }}
           >
             <Typography variant="h2" sx={{ mb: 2 }}>
