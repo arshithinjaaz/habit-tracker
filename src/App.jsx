@@ -89,6 +89,16 @@ function MainApp() {
     });
   };
 
+  // Run migrations on mount
+  useEffect(() => {
+    const initializeApp = async () => {
+      const { runMigrations } = await import('./services/migration.service.js');
+      await runMigrations();
+    };
+    
+    initializeApp();
+  }, []);
+
   // Check for existing user on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('habitTracker_currentUser');
