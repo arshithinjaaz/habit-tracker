@@ -50,7 +50,7 @@ const AdminLogin = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)',
       }}
     >
       <Container maxWidth="sm">
@@ -65,7 +65,7 @@ const AdminLogin = () => {
             <AdminPanelSettings
               sx={{
                 fontSize: 64,
-                color: '#667eea',
+                color: '#ff6347',
                 mb: 2,
               }}
             />
@@ -115,9 +115,9 @@ const AdminLogin = () => {
               disabled={loading}
               sx={{
                 py: 1.5,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                  background: 'linear-gradient(135deg, #ff7f50 0%, #ff6347 100%)',
                 },
               }}
             >

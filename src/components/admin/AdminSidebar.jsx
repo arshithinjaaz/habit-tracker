@@ -52,7 +52,7 @@ const AdminSidebar = ({ onItemClick }) => {
       {/* Header */}
       <Toolbar
         sx={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)',
           color: 'white',
           minHeight: { xs: 56, sm: 64 },
         }}
@@ -74,21 +74,21 @@ const AdminSidebar = ({ onItemClick }) => {
                   minHeight: 48,
                   px: 2.5,
                   '&.Mui-selected': {
-                    background: 'linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%)',
-                    borderRight: '4px solid #667eea',
+                    background: 'linear-gradient(135deg, rgba(255,99,71,0.15) 0%, rgba(255,127,80,0.15) 100%)',
+                    borderRight: '4px solid #ff6347',
                     '&:hover': {
-                      background: 'linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%)',
+                      background: 'linear-gradient(135deg, rgba(255,99,71,0.2) 0%, rgba(255,127,80,0.2) 100%)',
                     },
                   },
                   '&:hover': {
-                    background: 'rgba(102,126,234,0.08)',
+                    background: 'rgba(255,99,71,0.08)',
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 40,
-                    color: location.pathname === item.path ? '#667eea' : 'text.secondary',
+                    color: location.pathname === item.path ? '#ff6347' : 'text.secondary',
                   }}
                 >
                   {item.icon}
@@ -115,7 +115,7 @@ const AdminSidebar = ({ onItemClick }) => {
             borderRadius: 2,
             mb: 1,
             '&:hover': {
-              bgcolor: 'rgba(102,126,234,0.08)',
+              bgcolor: 'rgba(255,99,71,0.08)',
             },
           }}
         >
