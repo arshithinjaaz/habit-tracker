@@ -290,13 +290,16 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             {streak > 0 && (
               <Tooltip title={`${streak} day streak!`}>
                 <Chip
-                  icon={<LocalFireDepartmentIcon sx={{ color: '#ff6347 !important' }} />}
+                  icon={<LocalFireDepartmentIcon />}
                   label={streak}
                   sx={{ 
                     fontWeight: 600,
                     background: 'rgba(255, 99, 71, 0.15)',
                     color: '#ff6347',
                     border: '1px solid rgba(255, 99, 71, 0.3)',
+                    '& .MuiChip-icon': {
+                      color: '#ff6347',
+                    },
                   }}
                 />
               </Tooltip>
@@ -447,10 +450,8 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                     </Box>
                   }
                 >
-                  <ListItemIcon sx={{ minWidth: 36 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 80 }}>
                     {habit.icon && getIconComponent(habit.icon)}
-                  </ListItemIcon>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
                     <Checkbox
                       edge="start"
                       checked={habit.completed}
@@ -464,7 +465,7 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                         },
                       }}
                     />
-                  </ListItemIcon>
+                  </Box>
                   <ListItemText
                     primary={
                       <Typography

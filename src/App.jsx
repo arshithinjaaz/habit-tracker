@@ -99,17 +99,12 @@ function MainApp() {
   const [habitProgress, setHabitProgress] = useState(0);
   const [hollaMood, setHollaMood] = useState('happy');
   const [hollaMessage, setHollaMessage] = useState("Let's build great habits together!");
-  const [darkMode, setDarkMode] = useState(true); // Always dark mode
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
 
   const theme = useMemo(() => getTheme('dark'), []); // Always use dark theme
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const toggleDarkMode = () => {
-    // Dark mode is permanent, but keep function for compatibility
-  };
 
   // Check for existing user on mount
   useEffect(() => {
