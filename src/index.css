@@ -1,4 +1,4 @@
-/* Global styles */
+/* Global styles - Premium Minimal Design */
 * {
   margin: 0;
   padding: 0;
@@ -6,12 +6,12 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #0f0f0f;
   background-attachment: fixed;
 }
 
@@ -20,24 +20,24 @@ body {
   min-height: 100vh;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Dark Theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #1e1e1e;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ff6347;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: #ff7f5e;
 }
 
 /* Smooth animations */
@@ -47,12 +47,12 @@ body {
 
 /* Selection styling */
 ::selection {
-  background-color: #667eea;
+  background-color: #ff6347;
   color: white;
 }
 
 ::-moz-selection {
-  background-color: #667eea;
+  background-color: #ff6347;
   color: white;
 }
 
