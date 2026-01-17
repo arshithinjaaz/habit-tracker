@@ -172,16 +172,6 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
     return 'happy';
   };
 
-  const getHollaMessage = () => {
-    if (currentStep === 'choice') return '';
-    if (currentStep === 'name' && !isReturningUser) return '';
-    if (currentStep === 'name' && isReturningUser) return '';
-    if (currentStep === 'pin' && !isReturningUser) return '';
-    if (currentStep === 'pin' && isReturningUser) return '';
-    if (currentStep === 'confirm') return '';
-    return '';
-  };
-
   return (
     <Box
       sx={{
@@ -242,7 +232,6 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
             }}>
               <HollaCharacter 
                 mood={getHollaMood()}
-                message={getHollaMessage()}
               />
             </Box>
           </Box>

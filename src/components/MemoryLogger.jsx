@@ -306,9 +306,9 @@ const MemoryLogger = ({ userName }) => {
                   icon={<EmailIcon />}
                   checkedIcon={<EmailIcon />}
                   sx={{
-                    color: '#1976d2',
+                    color: '#ff6347',
                     '&.Mui-checked': {
-                      color: '#1976d2',
+                      color: '#ff6347',
                     },
                   }}
                 />
@@ -478,7 +478,7 @@ const MemoryLogger = ({ userName }) => {
                                           size="small"
                                           sx={{
                                             bgcolor: '#e3f2fd',
-                                            color: '#1976d2',
+                                            color: '#ff6347',
                                             fontWeight: 600,
                                           }}
                                         />
@@ -550,7 +550,7 @@ const MemoryLogger = ({ userName }) => {
       >
         <DialogTitle>
           <Box display="flex" alignItems="center" gap={1}>
-            <EmailIcon sx={{ color: '#1976d2' }} />
+            <EmailIcon sx={{ color: '#ff6347' }} />
             <Typography variant="h6">Email Settings</Typography>
           </Box>
         </DialogTitle>
@@ -571,7 +571,11 @@ const MemoryLogger = ({ userName }) => {
               }
             }}
             InputProps={{
-              startAdornment: <EmailIcon sx={{ color: '#ff6347' }} />
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon sx={{ color: '#ff6347' }} />
+                </InputAdornment>
+              )
             }}
           />
           <FormControlLabel
@@ -580,9 +584,9 @@ const MemoryLogger = ({ userName }) => {
                 checked={tempEnabled}
                 onChange={(e) => setTempEnabled(e.target.checked)}
                 sx={{
-                  color: '#1976d2',
+                  color: '#ff6347',
                   '&.Mui-checked': {
-                    color: '#1976d2',
+                    color: '#ff6347',
                   },
                 }}
               />
@@ -595,7 +599,7 @@ const MemoryLogger = ({ userName }) => {
         </DialogContent>
         <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
           <Button onClick={() => setSettingsOpen(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
-          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#1976d2', minHeight: { xs: 44, sm: 'auto' } }}>
+          <Button onClick={handleSaveSettings} variant="contained" sx={{ bgcolor: '#ff6347', minHeight: { xs: 44, sm: 'auto' } }}>
             Save
           </Button>
         </DialogActions>

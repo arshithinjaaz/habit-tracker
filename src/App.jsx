@@ -1,4 +1,4 @@
-import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button, IconButton, Tooltip, useMediaQuery, Paper } from '@mui/material';
+import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button, useMediaQuery, Paper } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -17,8 +17,6 @@ import AdminSettings from './components/admin/AdminSettings';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const getTheme = (mode) => createTheme({
   palette: {
@@ -75,17 +73,12 @@ function MainApp() {
   const [habitProgress, setHabitProgress] = useState(0);
   const [hollaMood, setHollaMood] = useState('happy');
   const [hollaMessage, setHollaMessage] = useState("Let's build great habits together!");
-  const [darkMode, setDarkMode] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
 
   const theme = useMemo(() => getTheme('dark'), []);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const toggleDarkMode = () => {
-    // Dark mode is now permanent - no toggle needed
-  };
 
   // Run migrations on mount
   useEffect(() => {
@@ -220,20 +213,6 @@ function MainApp() {
               justifyContent: 'center',
               mt: { xs: 2, md: 0 },
             }}>
-              <Tooltip title={darkMode ? 'Light Mode' : 'Dark Mode'}>
-                <IconButton 
-                  onClick={toggleDarkMode}
-                  aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-                  sx={{
-                    color: '#ff6347',
-                    '&:hover': {
-                      background: 'rgba(255,99,71,0.1)',
-                    },
-                  }}
-                >
-                  {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-                </IconButton>
-              </Tooltip>
               <Button
                 variant="outlined"
                 startIcon={!isMobile && <LogoutIcon />}
