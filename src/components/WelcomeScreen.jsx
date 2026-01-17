@@ -452,7 +452,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                           }}
                         />
                       }
-                      label="📨 Enable email memory backup"
+                      label="Enable email memory backup"
                       sx={{ 
                         mb: 2,
                         '& .MuiTypography-root': {
@@ -502,7 +502,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {isReturningUser ? `Hi ${name}! 🔐` : 'Create your PIN'}
+                    {isReturningUser ? `Hi ${name}!` : 'Create your PIN'}
                   </Typography>
                 <Typography
                   sx={{

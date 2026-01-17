@@ -1,21 +1,26 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { motion } from 'framer-motion';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import StarIcon from '@mui/icons-material/Star';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 const HollaCharacter = ({ mood = 'happy', message = '' }) => {
-  // Get emoji based on mood
-  const getEmoji = () => {
+  // Get icon based on mood
+  const getIcon = () => {
+    const iconStyle = { fontSize: 80, color: '#ff6347' };
     switch (mood) {
       case 'happy':
-        return '😊';
+        return <StarIcon sx={iconStyle} />;
       case 'excited':
-        return '🤩';
+        return <EmojiEventsIcon sx={iconStyle} />;
       case 'proud':
-        return '🥳';
+        return <EmojiEventsIcon sx={iconStyle} />;
       case 'encouraging':
-        return '💪';
+        return <LocalFireDepartmentIcon sx={iconStyle} />;
       default:
-        return '😊';
+        return <StarIcon sx={iconStyle} />;
     }
   };
 
@@ -31,27 +36,12 @@ const HollaCharacter = ({ mood = 'happy', message = '' }) => {
         ease: 'easeInOut',
       }}
       style={{
-        fontSize: '80px',
-        filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))',
+        filter: 'drop-shadow(0 4px 12px rgba(255,99,71,0.3))',
         position: 'relative',
+        display: 'inline-flex',
       }}
     >
-      {getEmoji()}
-      {message && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200 }}
-          style={{
-            position: 'absolute',
-            top: '-10px',
-            right: '-10px',
-            fontSize: '24px',
-          }}
-        >
-          {message}
-        </motion.div>
-      )}
+      {getIcon()}
     </motion.div>
   );
 };
