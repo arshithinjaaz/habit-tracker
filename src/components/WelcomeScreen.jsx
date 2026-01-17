@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   TextField, 
   Button, 
@@ -9,11 +9,14 @@ import {
   Checkbox,
   FormControlLabel
 } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HollaCharacter from './HollaCharacter';
+import { hashPin, verifyPin, migratePlainTextPin } from '../utils/crypto';
+import { sanitizeUserName } from '../utils/sanitize';
+import { validateUserPin, validateUserName } from '../schemas/user.schema';
 
 const WelcomeScreen = ({ onLoginSuccess }) => {
   const [name, setName] = useState('');
@@ -24,6 +27,36 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
   const [isReturningUser, setIsReturningUser] = useState(null);
   const [emailAddress, setEmailAddress] = useState('');
   const [enableEmail, setEnableEmail] = useState(false);
+
+  // Generate random positions once for background elements
+  const backgroundElements = useMemo(() => 
+    [...Array(6)].map((_, i) => ({
+      size: 100 + i * 50,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      duration: 5 + i,
+    })),
+    []
+  );
+
+  // Migrate plain-text PINs on mount
+  useEffect(() => {
+    const migrateExistingPins = async () => {
+      const users = [];
+      for (let key in localStorage) {
+        if (key.startsWith('habitTracker_pin_')) {
+          const userName = key.replace('habitTracker_pin_', '');
+          users.push(userName);
+        }
+      }
+      
+      for (const user of users) {
+        await migratePlainTextPin(user);
+      }
+    };
+    
+    migrateExistingPins();
+  }, []);
 
   const handleUserTypeSelection = (isReturning) => {
     setIsReturningUser(isReturning);
@@ -50,7 +83,17 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
   const handleNameSubmit = () => {
     if (!name.trim()) return;
     
-    const existingPin = localStorage.getItem(`habitTracker_pin_${name.trim()}`);
+    // Validate and sanitize username
+    const validation = validateUserName(name.trim());
+    if (!validation.success) {
+      setError(validation.error);
+      return;
+    }
+    
+    const sanitizedName = sanitizeUserName(name.trim());
+    setName(sanitizedName);
+    
+    const existingPin = localStorage.getItem(`habitTracker_pin_${sanitizedName}`);
     
     if (isReturningUser) {
       if (existingPin) {
@@ -69,12 +112,22 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
     }
   };
 
-  const handlePinSubmit = () => {
+  const handlePinSubmit = async () => {
     if (pin.length !== 4) return;
+    
+    // Validate PIN format
+    const validation = validateUserPin(pin);
+    if (!validation.success) {
+      setError(validation.error);
+      setPin('');
+      return;
+    }
     
     if (isReturningUser) {
       const storedPin = localStorage.getItem(`habitTracker_pin_${name}`);
-      if (pin === storedPin) {
+      const isValid = await verifyPin(pin, storedPin);
+      
+      if (isValid) {
         onLoginSuccess(name);
       } else {
         setError('Incorrect PIN. Try again.');
@@ -86,7 +139,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
     }
   };
 
-  const handleConfirmPinSubmit = () => {
+  const handleConfirmPinSubmit = async () => {
     if (confirmPin !== pin) {
       setError("PINs don't match. Try again.");
       setPin('');
@@ -94,7 +147,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
       setCurrentStep('pin');
       return;
     }
-    localStorage.setItem(`habitTracker_pin_${name}`, pin);
+    
+    // Hash the PIN before storing
+    const hashedPin = await hashPin(pin);
+    localStorage.setItem(`habitTracker_pin_${name}`, hashedPin);
     
     // Save Email settings if provided
     if (enableEmail && emailAddress.trim()) {
@@ -148,38 +204,58 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
           pointerEvents: 'none',
         }}
       >
-        {[...Array(6)].map((_, i) => (
-          <motion.div
+        {backgroundElements.map((elem, i) => (
+          <Box
             key={i}
-            style={{
+            sx={{
               position: 'absolute',
-              width: `${100 + i * 50}px`,
-              height: `${100 + i * 50}px`,
+              width: `${elem.size}px`,
+              height: `${elem.size}px`,
               borderRadius: '50%',
               background: 'rgba(255, 255, 255, 0.05)',
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, 20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 5 + i,
-              repeat: Infinity,
-              ease: 'easeInOut',
+              top: `${elem.top}%`,
+              left: `${elem.left}%`,
+              animation: `float-${i} ${elem.duration}s ease-in-out infinite`,
+              '@keyframes float-0': {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '50%': { transform: 'translate(20px, -30px) scale(1.1)' },
+              },
+              '@keyframes float-1': {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '50%': { transform: 'translate(-15px, -25px) scale(1.1)' },
+              },
+              '@keyframes float-2': {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '50%': { transform: 'translate(25px, -20px) scale(1.1)' },
+              },
+              '@keyframes float-3': {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '50%': { transform: 'translate(-20px, -35px) scale(1.1)' },
+              },
+              '@keyframes float-4': {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '50%': { transform: 'translate(18px, -28px) scale(1.1)' },
+              },
+              '@keyframes float-5': {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '50%': { transform: 'translate(-22px, -32px) scale(1.1)' },
+              },
             }}
           />
         ))}
       </Box>
 
       {/* Main Content */}
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        style={{ position: 'relative', zIndex: 1 }}
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          animation: 'fadeIn 0.5s ease-in-out',
+          '@keyframes fadeIn': {
+            '0%': { transform: 'scale(0.9)', opacity: 0 },
+            '100%': { transform: 'scale(1)', opacity: 1 },
+          },
+        }}
       >
         <Box
           sx={{
@@ -202,28 +278,22 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
               left: '50%',
               transform: 'translateX(-50%)',
               zIndex: 10,
+              animation: 'slideDown 0.5s ease-out 0.2s both',
+              '@keyframes slideDown': {
+                '0%': { transform: 'translateX(-50%) translateY(-100px)', opacity: 0 },
+                '100%': { transform: 'translateX(-50%) translateY(0)', opacity: 1 },
+              },
             }}
           >
-            <motion.div
-              initial={{ y: -100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ 
-                type: 'spring', 
-                stiffness: 200, 
-                damping: 15,
-                delay: 0.2 
-              }}
-            >
-              <Box sx={{ 
-                transform: 'scale(1.2)',
-                filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))',
-              }}>
-                <HollaCharacter 
-                  mood={getHollaMood()}
-                  message={getHollaMessage()}
-                />
-              </Box>
-            </motion.div>
+            <Box sx={{ 
+              transform: 'scale(1.2)',
+              filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))',
+            }}>
+              <HollaCharacter 
+                mood={getHollaMood()}
+                message={getHollaMessage()}
+              />
+            </Box>
           </Box>
 
           {/* Back Button */}
@@ -247,13 +317,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
           <AnimatePresence mode="wait">
             {/* Choice Screen */}
             {currentStep === 'choice' && (
-              <motion.div
-                key="choice"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
+              <Box key="choice">
                 <Box sx={{ mt: 6 }}>
                   <Typography
                     variant="h4"
@@ -328,18 +392,12 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   </Button>
                 </Box>
                 </Box>
-              </motion.div>
+              </Box>
             )}
 
             {/* Name Input Screen */}
             {currentStep === 'name' && (
-              <motion.div
-                key="name"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
+              <Box key="name">
                 <Box sx={{ mt: 6 }}>
                   <Typography
                     variant="h5"
@@ -474,18 +532,12 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   Continue
                 </Button>
                 </Box>
-              </motion.div>
+              </Box>
             )}
 
             {/* PIN Input Screen */}
             {currentStep === 'pin' && (
-              <motion.div
-                key="pin"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
+              <Box key="pin">
                 <Box sx={{ mt: 6 }}>
                   <Typography
                     variant="h5"
@@ -571,18 +623,12 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   {isReturningUser ? 'Unlock' : 'Continue'}
                 </Button>
                 </Box>
-              </motion.div>
+              </Box>
             )}
 
             {/* Confirm PIN Screen */}
             {currentStep === 'confirm' && (
-              <motion.div
-                key="confirm"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
+              <Box key="confirm">
                 <Box sx={{ mt: 6 }}>
                   <Typography
                     variant="h5"
@@ -668,11 +714,11 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                   Get Started 🚀
                 </Button>
                 </Box>
-              </motion.div>
+              </Box>
             )}
           </AnimatePresence>
         </Box>
-      </motion.div>
+      </Box>
     </Box>
   );
 };
