@@ -139,13 +139,7 @@ const QuoteOfTheDay = () => {
   }, []);
 
   const getCategoryColor = (category) => {
-    const colors = {
-      Love: '#e91e63',
-      Life: '#667eea',
-      Patience: '#4caf50',
-      Time: '#ff9800',
-    };
-    return colors[category] || '#667eea';
+    return '#ff6347';
   };
 
   return (

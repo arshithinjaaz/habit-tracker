@@ -38,7 +38,7 @@ const Onboarding = ({ open, onClose }) => {
     },
     {
       title: 'Log Your Memories',
-      icon: <NoteAddIcon sx={{ fontSize: 64, color: '#667eea' }} />,
+      icon: <NoteAddIcon sx={{ fontSize: 64, color: '#ff6347' }} />,
       description: 'Capture daily thoughts, achievements, and reflections. Your memories are organized by month for easy browsing.',
     },
     {
@@ -80,7 +80,7 @@ const Onboarding = ({ open, onClose }) => {
       PaperProps={{
         sx: {
           borderRadius: 4,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: '#1e1e1e',
         },
       }}
     >
@@ -115,13 +115,7 @@ const Onboarding = ({ open, onClose }) => {
               }}
             >
               <Box mb={2}>
-                {typeof steps[activeStep].icon === 'string' ? (
-                  <Typography variant="h1" sx={{ fontSize: 64 }}>
-                    {steps[activeStep].icon}
-                  </Typography>
-                ) : (
-                  steps[activeStep].icon
-                )}
+                {steps[activeStep].icon}
               </Box>
               <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
                 {steps[activeStep].title}
@@ -150,8 +144,8 @@ const Onboarding = ({ open, onClose }) => {
             onClick={handleNext}
             variant="contained"
             sx={{
-              bgcolor: 'white',
-              color: '#667eea',
+              bgcolor: '#2a2a2a',
+              color: '#ff6347',
               '&:hover': {
                 bgcolor: '#f5f5f5',
               },

@@ -7,12 +7,14 @@ import {
   Alert,
   IconButton,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  InputAdornment
 } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EmailIcon from '@mui/icons-material/Email';
 import HollaCharacter from './HollaCharacter';
 import { hashPin, verifyPin, migratePlainTextPin } from '../utils/crypto';
 import { sanitizeUserName } from '../utils/sanitize';
@@ -170,16 +172,6 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
     return 'happy';
   };
 
-  const getHollaMessage = () => {
-    if (currentStep === 'choice') return '👋';
-    if (currentStep === 'name' && !isReturningUser) return '😊';
-    if (currentStep === 'name' && isReturningUser) return '💖';
-    if (currentStep === 'pin' && !isReturningUser) return '🔒';
-    if (currentStep === 'pin' && isReturningUser) return '🔐';
-    if (currentStep === 'confirm') return '✨';
-    return '😊';
-  };
-
   return (
     <Box
       sx={{
@@ -187,63 +179,12 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: '#0f0f0f',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
       {/* Animated Background Elements */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          overflow: 'hidden',
-          pointerEvents: 'none',
-        }}
-      >
-        {backgroundElements.map((elem, i) => (
-          <Box
-            key={i}
-            sx={{
-              position: 'absolute',
-              width: `${elem.size}px`,
-              height: `${elem.size}px`,
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.05)',
-              top: `${elem.top}%`,
-              left: `${elem.left}%`,
-              animation: `float-${i} ${elem.duration}s ease-in-out infinite`,
-              '@keyframes float-0': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '50%': { transform: 'translate(20px, -30px) scale(1.1)' },
-              },
-              '@keyframes float-1': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '50%': { transform: 'translate(-15px, -25px) scale(1.1)' },
-              },
-              '@keyframes float-2': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '50%': { transform: 'translate(25px, -20px) scale(1.1)' },
-              },
-              '@keyframes float-3': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '50%': { transform: 'translate(-20px, -35px) scale(1.1)' },
-              },
-              '@keyframes float-4': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '50%': { transform: 'translate(18px, -28px) scale(1.1)' },
-              },
-              '@keyframes float-5': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '50%': { transform: 'translate(-22px, -32px) scale(1.1)' },
-              },
-            }}
-          />
-        ))}
-      </Box>
 
       {/* Main Content */}
       <Box
@@ -259,14 +200,14 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
       >
         <Box
           sx={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: '#1e1e1e',
             backdropFilter: 'blur(20px)',
             borderRadius: 4,
             p: { xs: 2, sm: 3, md: 5 },
             width: { xs: '90%', sm: 400 },
             maxWidth: { xs: '100%', sm: 450 },
             mx: { xs: 2, sm: 0 },
-            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
             position: 'relative',
           }}
         >
@@ -291,7 +232,6 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
             }}>
               <HollaCharacter 
                 mood={getHollaMood()}
-                message={getHollaMessage()}
               />
             </Box>
           </Box>
@@ -304,9 +244,9 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                 position: 'absolute',
                 top: 16,
                 left: 16,
-                color: '#667eea',
+                color: '#ff6347',
                 '&:hover': {
-                  background: 'rgba(102, 126, 234, 0.1)',
+                  background: 'rgba(255, 99, 71, 0.1)',
                 },
               }}
             >
@@ -325,18 +265,16 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       mb: 1,
                       fontWeight: 700,
                       fontSize: { xs: '1.75rem', sm: '2.125rem' },
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
+                      color: '#ff6347',
                       textAlign: 'center',
                     }}
                   >
-                    Holla! 👋
+                    Holla!
                   </Typography>
                   <Typography
                     sx={{
                       mb: 4,
-                      color: '#666',
+                      color: '#a0a0a0',
                       textAlign: 'center',
                       fontSize: '0.95rem',
                     }}
@@ -355,10 +293,11 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       minHeight: { xs: 48, sm: 44 },
                       fontSize: { xs: '16px', sm: '1rem' },
                       fontWeight: 600,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      boxShadow: '0 4px 15px rgba(102,126,234,0.4)',
+                      background: '#ff6347',
+                      boxShadow: '0 4px 15px rgba(255,99,71,0.4)',
                       '&:hover': {
-                        boxShadow: '0 6px 20px rgba(102,126,234,0.6)',
+                        background: '#ff8570',
+                        boxShadow: '0 6px 20px rgba(255,99,71,0.6)',
                         transform: 'translateY(-2px)',
                       },
                       transition: 'all 0.3s ease',
@@ -376,13 +315,13 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       minHeight: { xs: 48, sm: 44 },
                       fontSize: { xs: '16px', sm: '1rem' },
                       fontWeight: 600,
-                      borderColor: '#667eea',
-                      color: '#667eea',
+                      borderColor: '#ff6347',
+                      color: '#ff6347',
                       borderWidth: 2,
                       '&:hover': {
                         borderWidth: 2,
-                        borderColor: '#764ba2',
-                        background: 'rgba(102,126,234,0.05)',
+                        borderColor: '#ff8570',
+                        background: 'rgba(255,99,71,0.05)',
                         transform: 'translateY(-2px)',
                       },
                       transition: 'all 0.3s ease',
@@ -404,7 +343,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     sx={{
                       mb: 1,
                       fontWeight: 600,
-                      color: '#333',
+                      color: '#ffffff',
                       textAlign: 'center',
                     }}
                   >
@@ -413,7 +352,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                 <Typography
                   sx={{
                     mb: 3,
-                    color: '#666',
+                    color: '#a0a0a0',
                     textAlign: 'center',
                     fontSize: '0.9rem',
                   }}
@@ -443,10 +382,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                         borderWidth: 2,
                       },
                     },
@@ -465,7 +404,11 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                       onChange={(e) => setEmailAddress(e.target.value)}
                       helperText="Receive automatic memory backups via email"
                       InputProps={{
-                        startAdornment: <span style={{ marginRight: 8 }}>📧</span>
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <EmailIcon sx={{ color: '#ff6347' }} />
+                          </InputAdornment>
+                        )
                       }}
                       sx={{
                         mb: 2,
@@ -475,10 +418,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                         '& .MuiOutlinedInput-root': {
                           borderRadius: 2,
                           '&:hover fieldset': {
-                            borderColor: '#667eea',
+                            borderColor: '#ff6347',
                           },
                           '&.Mui-focused fieldset': {
-                            borderColor: '#667eea',
+                            borderColor: '#ff6347',
                             borderWidth: 2,
                           },
                         },
@@ -491,14 +434,14 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                           checked={enableEmail}
                           onChange={(e) => setEnableEmail(e.target.checked)}
                           sx={{
-                            color: '#667eea',
+                            color: '#ff6347',
                             '&.Mui-checked': {
-                              color: '#667eea',
+                              color: '#ff6347',
                             },
                           }}
                         />
                       }
-                      label="📨 Enable email memory backup"
+                      label="Enable email memory backup"
                       sx={{ 
                         mb: 2,
                         '& .MuiTypography-root': {
@@ -520,7 +463,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     minHeight: { xs: 48, sm: 44 },
                     fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: '#ff6347',
                     '&:hover': {
                       boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
                     },
@@ -544,16 +487,16 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     sx={{
                       mb: 1,
                       fontWeight: 600,
-                      color: '#333',
+                      color: '#ffffff',
                       textAlign: 'center',
                     }}
                   >
-                    {isReturningUser ? `Hi ${name}! 🔐` : 'Create your PIN'}
+                    {isReturningUser ? `Hi ${name}!` : 'Create your PIN'}
                   </Typography>
                 <Typography
                   sx={{
                     mb: 3,
-                    color: '#666',
+                    color: '#a0a0a0',
                     textAlign: 'center',
                     fontSize: '0.9rem',
                   }}
@@ -590,10 +533,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                         borderWidth: 2,
                       },
                     },
@@ -611,7 +554,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     minHeight: { xs: 48, sm: 44 },
                     fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: '#ff6347',
                     '&:hover': {
                       boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
                     },
@@ -635,7 +578,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     sx={{
                       mb: 1,
                       fontWeight: 600,
-                      color: '#333',
+                      color: '#ffffff',
                       textAlign: 'center',
                     }}
                   >
@@ -644,7 +587,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                 <Typography
                   sx={{
                     mb: 3,
-                    color: '#666',
+                    color: '#a0a0a0',
                     textAlign: 'center',
                     fontSize: '0.9rem',
                   }}
@@ -681,10 +624,10 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '&:hover fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#667eea',
+                        borderColor: '#ff6347',
                         borderWidth: 2,
                       },
                     },
@@ -702,7 +645,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     minHeight: { xs: 48, sm: 44 },
                     fontSize: { xs: '16px', sm: '1rem' },
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: '#ff6347',
                     '&:hover': {
                       boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
                     },
@@ -711,7 +654,7 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
                     },
                   }}
                 >
-                  Get Started 🚀
+                  Get Started
                 </Button>
                 </Box>
               </Box>

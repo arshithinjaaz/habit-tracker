@@ -38,7 +38,7 @@ const Greeting = () => {
         sx={{
           p: 4,
           mb: 3,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: '#1e1e1e',
           color: 'white',
           borderRadius: 3,
         }}

@@ -34,19 +34,29 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import PeopleIcon from '@mui/icons-material/People';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import WorkIcon from '@mui/icons-material/Work';
 
 const HabitCheckbox = ({ onProgressUpdate, userName }) => {
   const defaultHabits = [
-    { id: 'exercise', label: '🏃‍♀️ Exercise (30 min)', category: 'Health' },
-    { id: 'water', label: '💧 Drink 8 glasses of water', category: 'Health' },
-    { id: 'reading', label: '📚 Read for 20 minutes', category: 'Learning' },
-    { id: 'meditation', label: '🧘‍♀️ Meditate (10 min)', category: 'Wellness' },
-    { id: 'sleep', label: '😴 Sleep 7-8 hours', category: 'Health' },
-    { id: 'gratitude', label: '🙏 Practice gratitude', category: 'Wellness' },
-    { id: 'healthy-meal', label: '🥗 Eat healthy meals', category: 'Health' },
-    { id: 'social', label: '👥 Connect with loved ones', category: 'Social' },
-    { id: 'learn', label: '💡 Learn something new', category: 'Learning' },
-    { id: 'organize', label: '📝 Organize workspace', category: 'Productivity' },
+    { id: 'exercise', label: 'Exercise (30 min)', category: 'Health', icon: 'FitnessCenter' },
+    { id: 'water', label: 'Drink 8 glasses of water', category: 'Health', icon: 'WaterDrop' },
+    { id: 'reading', label: 'Read for 20 minutes', category: 'Learning', icon: 'MenuBook' },
+    { id: 'meditation', label: 'Meditate (10 min)', category: 'Wellness', icon: 'SelfImprovement' },
+    { id: 'sleep', label: 'Sleep 7-8 hours', category: 'Health', icon: 'Bedtime' },
+    { id: 'gratitude', label: 'Practice gratitude', category: 'Wellness', icon: 'Favorite' },
+    { id: 'healthy-meal', label: 'Eat healthy meals', category: 'Health', icon: 'Restaurant' },
+    { id: 'social', label: 'Connect with loved ones', category: 'Social', icon: 'People' },
+    { id: 'learn', label: 'Learn something new', category: 'Learning', icon: 'Lightbulb' },
+    { id: 'organize', label: 'Organize workspace', category: 'Productivity', icon: 'Work' },
   ];
 
   const [habits, setHabits] = useState(() => {
@@ -225,6 +235,23 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
     : habits.filter(h => h.category === filteredCategory);
 
   const categories = ['All', ...new Set(habits.map(h => h.category))];
+
+  const getHabitIcon = (iconName) => {
+    const iconProps = { sx: { fontSize: 20, mr: 1, color: '#ff6347' } };
+    const icons = {
+      FitnessCenter: <FitnessCenterIcon {...iconProps} />,
+      WaterDrop: <WaterDropIcon {...iconProps} />,
+      MenuBook: <MenuBookIcon {...iconProps} />,
+      SelfImprovement: <SelfImprovementIcon {...iconProps} />,
+      Bedtime: <BedtimeIcon {...iconProps} />,
+      Favorite: <FavoriteIcon {...iconProps} />,
+      Restaurant: <RestaurantIcon {...iconProps} />,
+      People: <PeopleIcon {...iconProps} />,
+      Lightbulb: <LightbulbIcon {...iconProps} />,
+      Work: <WorkIcon {...iconProps} />,
+    };
+    return icons[iconName] || null;
+  };
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -415,16 +442,19 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          textDecoration: habit.completed ? 'line-through' : 'none',
-                          color: habit.completed ? '#757575' : 'inherit',
-                          fontWeight: habit.completed ? 400 : 500,
-                        }}
-                      >
-                        {habit.label}
-                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        {habit.icon && getHabitIcon(habit.icon)}
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            textDecoration: habit.completed ? 'line-through' : 'none',
+                            color: habit.completed ? '#757575' : 'inherit',
+                            fontWeight: habit.completed ? 400 : 500,
+                          }}
+                        >
+                          {habit.label}
+                        </Typography>
+                      </Box>
                     }
                   />
                   <Chip
