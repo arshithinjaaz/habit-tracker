@@ -3,6 +3,7 @@
  */
 
 import '@testing-library/jest-dom';
+import { vi, beforeEach } from 'vitest';
 
 // Mock localStorage for tests
 const localStorageMock = {
