@@ -130,8 +130,8 @@ const ProgressGraph = ({ userName }) => {
       {
         label: 'Daily Habit Score (%)',
         data: filteredData.map((d) => d.score),
-        borderColor: 'rgb(102, 126, 234)',
-        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+        borderColor: '#ff6347',
+        backgroundColor: 'rgba(255, 99, 71, 0.2)',
         tension: 0.4,
         fill: true,
       },
@@ -172,8 +172,8 @@ const ProgressGraph = ({ userName }) => {
     datasets: [
       {
         data: [avgScore, 100 - avgScore],
-        backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(200, 200, 200, 0.3)'],
-        borderColor: ['rgb(102, 126, 234)', 'rgb(200, 200, 200)'],
+        backgroundColor: ['rgba(255, 99, 71, 0.8)', 'rgba(42, 42, 42, 0.5)'],
+        borderColor: ['#ff6347', '#2a2a2a'],
         borderWidth: 2,
       },
     ],
@@ -211,54 +211,66 @@ const ProgressGraph = ({ userName }) => {
       {/* Weekly Summary Stats */}
       {weeklyStats && (
         <Paper
-          elevation={8}
+          elevation={0}
           sx={{
             p: 3,
             mb: 3,
             borderRadius: 3,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
+            background: '#1e1e1e',
+            border: '1px solid #2a2a2a',
+            color: '#e0e0e0',
           }}
         >
           <Box display="flex" alignItems="center" gap={1} mb={2}>
-            <AssessmentIcon sx={{ fontSize: 32 }} />
-            <Typography variant="h5" fontWeight="bold">
+            <AssessmentIcon sx={{ fontSize: 32, color: '#ff6347' }} />
+            <Typography variant="h5" fontWeight={600} color="#e0e0e0">
               Weekly Summary
             </Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={4}>
-              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
-                <Typography variant="h4" fontWeight="bold">{weeklyStats.avgScore}%</Typography>
-                <Typography variant="body2">Average</Typography>
+              <Paper sx={{ p: 2, textAlign: 'center', background: '#242424', border: '1px solid #2a2a2a' }}>
+                <Typography variant="h4" fontWeight={600} color="#ff6347">{weeklyStats.avgScore}%</Typography>
+                <Typography variant="body2" color="#9e9e9e">Average</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={4}>
-              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
-                <Typography variant="h4" fontWeight="bold">{weeklyStats.perfectDays}</Typography>
-                <Typography variant="body2">Perfect Days</Typography>
+              <Paper sx={{ p: 2, textAlign: 'center', background: '#242424', border: '1px solid #2a2a2a' }}>
+                <Typography variant="h4" fontWeight={600} color="#ff6347">{weeklyStats.perfectDays}</Typography>
+                <Typography variant="body2" color="#9e9e9e">Perfect Days</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={4}>
-              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
+              <Paper sx={{ p: 2, textAlign: 'center', background: '#242424', border: '1px solid #2a2a2a' }}>
                 <Box display="flex" alignItems="center" justifyContent="center" gap={0.5}>
-                  <Typography variant="h4" fontWeight="bold">{Math.abs(weeklyStats.trend)}%</Typography>
-                  {weeklyStats.trend >= 0 ? <TrendingUpIcon /> : <TrendingDownIcon />}
+                  <Typography variant="h4" fontWeight={600} color="#ff6347">{Math.abs(weeklyStats.trend)}%</Typography>
+                  {weeklyStats.trend >= 0 ? <TrendingUpIcon sx={{ color: '#4caf50' }} /> : <TrendingDownIcon sx={{ color: '#f44336' }} />}
                 </Box>
-                <Typography variant="body2">Trend</Typography>
+                <Typography variant="body2" color="#9e9e9e">Trend</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6}>
               <Chip 
-                icon={<EmojiEventsIcon />}
                 label={`Best: ${weeklyStats.bestDay.date} (${weeklyStats.bestDay.score}%)`}
-                sx={{ width: '100%', bgcolor: 'rgba(76, 175, 80, 0.9)', color: 'white', fontWeight: 'bold' }}
+                sx={{ 
+                  width: '100%', 
+                  bgcolor: 'rgba(76, 175, 80, 0.2)', 
+                  color: '#4caf50', 
+                  fontWeight: 600,
+                  border: '1px solid rgba(76, 175, 80, 0.3)',
+                }}
               />
             </Grid>
             <Grid item xs={6}>
               <Chip 
                 label={`Needs Work: ${weeklyStats.worstDay.date} (${weeklyStats.worstDay.score}%)`}
-                sx={{ width: '100%', bgcolor: 'rgba(244, 67, 54, 0.9)', color: 'white', fontWeight: 'bold' }}
+                sx={{ 
+                  width: '100%', 
+                  bgcolor: 'rgba(244, 67, 54, 0.2)', 
+                  color: '#f44336', 
+                  fontWeight: 600,
+                  border: '1px solid rgba(244, 67, 54, 0.3)',
+                }}
               />
             </Grid>
           </Grid>
@@ -266,19 +278,19 @@ const ProgressGraph = ({ userName }) => {
       )}
 
       <Paper
-        elevation={8}
+        elevation={0}
         sx={{
           p: 3,
           mb: 3,
           borderRadius: 3,
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+          background: '#1e1e1e',
+          border: '1px solid #2a2a2a',
         }}
       >
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={3} flexWrap="wrap" gap={2}>
           <Box display="flex" alignItems="center" gap={1}>
-            <TrendingUpIcon color="primary" sx={{ fontSize: 32 }} />
-            <Typography variant="h5" fontWeight="bold">
+            <TrendingUpIcon sx={{ fontSize: 32, color: '#ff6347' }} />
+            <Typography variant="h5" fontWeight={600} color="#e0e0e0">
               Progress Insights
             </Typography>
           </Box>
@@ -341,7 +353,8 @@ const ProgressGraph = ({ userName }) => {
             sx={{
               p: 6,
               textAlign: 'center',
-              background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+              background: '#242424',
+              border: '1px solid #2a2a2a',
               borderRadius: 2,
               minHeight: 300,
               display: 'flex',
@@ -350,13 +363,11 @@ const ProgressGraph = ({ userName }) => {
               alignItems: 'center',
             }}
           >
-            <Typography variant="h2" sx={{ mb: 2 }}>
-              📊
-            </Typography>
-            <Typography variant="h6" color="text.primary" gutterBottom>
+            <AssessmentIcon sx={{ fontSize: 64, color: '#9e9e9e', mb: 2 }} />
+            <Typography variant="h6" color="#e0e0e0" gutterBottom>
               No Data Yet
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1" color="#9e9e9e">
               Start checking off your daily habits to see your progress here!
             </Typography>
           </Paper>
@@ -386,31 +397,32 @@ const ProgressGraph = ({ userName }) => {
                 justifyContent: 'space-around',
                 mt: 3,
                 p: 2,
-                bgcolor: 'background.default',
+                bgcolor: '#242424',
                 borderRadius: 2,
+                border: '1px solid #2a2a2a',
               }}
             >
               <Box textAlign="center">
-                <Typography variant="h6" color="primary">
+                <Typography variant="h6" color="#ff6347">
                   {avgScore}%
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="#9e9e9e">
                   Average
                 </Typography>
               </Box>
               <Box textAlign="center">
-                <Typography variant="h6" color="success.main">
+                <Typography variant="h6" color="#4caf50">
                   {filteredData.length > 0 ? Math.max(...filteredData.map((d) => d.score)) : 0}%
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="#9e9e9e">
                   Best Day
                 </Typography>
               </Box>
               <Box textAlign="center">
-                <Typography variant="h6" color="info.main">
+                <Typography variant="h6" color="#2196f3">
                   {filteredData.length}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="#9e9e9e">
                   Days Tracked
                 </Typography>
               </Box>
@@ -420,16 +432,34 @@ const ProgressGraph = ({ userName }) => {
       </Paper>
 
       {/* Reset Confirmation Dialog */}
-      <Dialog open={openResetDialog} onClose={() => setOpenResetDialog(false)}>
-        <DialogTitle>Reset All Data?</DialogTitle>
+      <Dialog 
+        open={openResetDialog} 
+        onClose={() => setOpenResetDialog(false)}
+        PaperProps={{
+          sx: {
+            background: '#1e1e1e',
+            border: '1px solid #2a2a2a',
+          }
+        }}
+      >
+        <DialogTitle sx={{ color: '#e0e0e0' }}>Reset All Data?</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography color="#9e9e9e">
             This will permanently delete all your habits, memories, and progress data. This action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenResetDialog(false)}>Cancel</Button>
-          <Button onClick={handleResetData} color="error" variant="contained">
+          <Button onClick={() => setOpenResetDialog(false)} sx={{ color: '#9e9e9e' }}>Cancel</Button>
+          <Button 
+            onClick={handleResetData} 
+            variant="contained" 
+            sx={{ 
+              bgcolor: '#f44336',
+              '&:hover': {
+                bgcolor: '#d32f2f',
+              },
+            }}
+          >
             Reset Everything
           </Button>
         </DialogActions>

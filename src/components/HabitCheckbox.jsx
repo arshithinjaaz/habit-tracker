@@ -28,26 +28,53 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import GroupIcon from '@mui/icons-material/Group';
+import SchoolIcon from '@mui/icons-material/School';
+import FolderIcon from '@mui/icons-material/Folder';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 const HabitCheckbox = ({ onProgressUpdate, userName }) => {
   const defaultHabits = [
-    { id: 'exercise', label: '🏃‍♀️ Exercise (30 min)', category: 'Health' },
-    { id: 'water', label: '💧 Drink 8 glasses of water', category: 'Health' },
-    { id: 'reading', label: '📚 Read for 20 minutes', category: 'Learning' },
-    { id: 'meditation', label: '🧘‍♀️ Meditate (10 min)', category: 'Wellness' },
-    { id: 'sleep', label: '😴 Sleep 7-8 hours', category: 'Health' },
-    { id: 'gratitude', label: '🙏 Practice gratitude', category: 'Wellness' },
-    { id: 'healthy-meal', label: '🥗 Eat healthy meals', category: 'Health' },
-    { id: 'social', label: '👥 Connect with loved ones', category: 'Social' },
-    { id: 'learn', label: '💡 Learn something new', category: 'Learning' },
-    { id: 'organize', label: '📝 Organize workspace', category: 'Productivity' },
+    { id: 'exercise', label: 'Exercise (30 min)', category: 'Health', icon: 'FitnessCenter' },
+    { id: 'water', label: 'Drink 8 glasses of water', category: 'Health', icon: 'WaterDrop' },
+    { id: 'reading', label: 'Read for 20 minutes', category: 'Learning', icon: 'MenuBook' },
+    { id: 'meditation', label: 'Meditate (10 min)', category: 'Wellness', icon: 'SelfImprovement' },
+    { id: 'sleep', label: 'Sleep 7-8 hours', category: 'Health', icon: 'Bedtime' },
+    { id: 'gratitude', label: 'Practice gratitude', category: 'Wellness', icon: 'Favorite' },
+    { id: 'healthy-meal', label: 'Eat healthy meals', category: 'Health', icon: 'Restaurant' },
+    { id: 'social', label: 'Connect with loved ones', category: 'Social', icon: 'Group' },
+    { id: 'learn', label: 'Learn something new', category: 'Learning', icon: 'School' },
+    { id: 'organize', label: 'Organize workspace', category: 'Productivity', icon: 'Folder' },
   ];
+
+  // Helper function to get icon component
+  const getIconComponent = (iconName) => {
+    const icons = {
+      FitnessCenter: FitnessCenterIcon,
+      WaterDrop: WaterDropIcon,
+      MenuBook: MenuBookIcon,
+      SelfImprovement: SelfImprovementIcon,
+      Bedtime: BedtimeIcon,
+      Favorite: FavoriteIcon,
+      Restaurant: RestaurantIcon,
+      Group: GroupIcon,
+      School: SchoolIcon,
+      Folder: FolderIcon,
+    };
+    const IconComponent = icons[iconName] || FolderIcon;
+    return <IconComponent sx={{ fontSize: 20, color: '#9e9e9e' }} />;
+  };
 
   const [habits, setHabits] = useState(() => {
     try {
@@ -228,11 +255,11 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
 
   const getCategoryColor = (category) => {
     const colors = {
-      Health: '#4CAF50',
-      Wellness: '#9C27B0',
-      Learning: '#2196F3',
-      Social: '#FF9800',
-      Productivity: '#F44336',
+      Health: '#4caf50',
+      Wellness: '#9c27b0',
+      Learning: '#2196f3',
+      Social: '#ff9800',
+      Productivity: '#ff6347',
     };
     return colors[category] || '#757575';
   };
@@ -243,41 +270,19 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Celebration Confetti */}
-      <AnimatePresence>
-        {showCelebration && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              zIndex: 9999,
-              fontSize: '100px',
-            }}
-          >
-            🎉🎊✨
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <Paper
-        elevation={8}
+        elevation={0}
         sx={{
-          p: 3,
+          p: { xs: 2, md: 3 },
           borderRadius: 3,
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+          background: '#1e1e1e',
+          border: '1px solid #2a2a2a',
         }}
       >
         {/* Header with Streak */}
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} flexWrap="wrap" gap={2}>
           <Box display="flex" alignItems="center" gap={1}>
-            <EmojiEventsIcon color="primary" sx={{ fontSize: 32 }} />
-            <Typography variant="h5" fontWeight="bold">
+            <Typography variant="h5" fontWeight={600} color="#e0e0e0">
               Daily Habits
             </Typography>
           </Box>
@@ -286,21 +291,41 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
               <Tooltip title={`${streak} day streak!`}>
                 <Chip
                   icon={<LocalFireDepartmentIcon />}
-                  label={`${streak} 🔥`}
-                  color="error"
-                  sx={{ fontWeight: 'bold' }}
+                  label={streak}
+                  sx={{ 
+                    fontWeight: 600,
+                    background: 'rgba(255, 99, 71, 0.15)',
+                    color: '#ff6347',
+                    border: '1px solid rgba(255, 99, 71, 0.3)',
+                    '& .MuiChip-icon': {
+                      color: '#ff6347',
+                    },
+                  }}
                 />
               </Tooltip>
             )}
             {completedCount > 0 && (
               <Chip
                 label={`${completedCount}/${totalCount}`}
-                color="primary"
-                sx={{ fontWeight: 'bold' }}
+                sx={{ 
+                  fontWeight: 600,
+                  background: 'rgba(255, 99, 71, 0.15)',
+                  color: '#ff6347',
+                  border: '1px solid rgba(255, 99, 71, 0.3)',
+                }}
               />
             )}
             <Tooltip title="Add Habit">
-              <IconButton color="primary" onClick={() => setOpenAddDialog(true)} size="small">
+              <IconButton 
+                sx={{ 
+                  color: '#ff6347',
+                  '&:hover': {
+                    background: 'rgba(255, 99, 71, 0.1)',
+                  }
+                }} 
+                onClick={() => setOpenAddDialog(true)} 
+                size="small"
+              >
                 <AddIcon />
               </IconButton>
             </Tooltip>
@@ -310,10 +335,10 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
         {/* Progress Bar */}
         <Box mb={3}>
           <Box display="flex" justifyContent="space-between" mb={1}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="#9e9e9e">
               Today's Progress
             </Typography>
-            <Typography variant="body2" fontWeight="bold" color="primary">
+            <Typography variant="body2" fontWeight={600} color="#ff6347">
               {completionPercentage}%
             </Typography>
           </Box>
@@ -321,12 +346,12 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             variant="determinate"
             value={completionPercentage}
             sx={{
-              height: 10,
-              borderRadius: 5,
-              backgroundColor: '#e0e0e0',
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: '#2a2a2a',
               '& .MuiLinearProgress-bar': {
-                borderRadius: 5,
-                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                borderRadius: 4,
+                background: '#ff6347',
               },
             }}
           />
@@ -334,7 +359,7 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
 
         {/* Category Filter */}
         <Box mb={2} display="flex" alignItems="center" gap={1} flexWrap="wrap">
-          <FilterListIcon color="action" fontSize="small" />
+          <FilterListIcon sx={{ color: '#9e9e9e' }} fontSize="small" />
           <ToggleButtonGroup
             value={filteredCategory}
             exclusive
@@ -342,7 +367,24 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             size="small"
           >
             {categories.map(cat => (
-              <ToggleButton key={cat} value={cat} sx={{ textTransform: 'none', px: 2 }}>
+              <ToggleButton 
+                key={cat} 
+                value={cat} 
+                sx={{ 
+                  textTransform: 'none', 
+                  px: 2,
+                  color: '#9e9e9e',
+                  borderColor: '#2a2a2a',
+                  '&.Mui-selected': {
+                    background: 'rgba(255, 99, 71, 0.15)',
+                    color: '#ff6347',
+                    borderColor: '#ff6347',
+                    '&:hover': {
+                      background: 'rgba(255, 99, 71, 0.2)',
+                    },
+                  },
+                }}
+              >
                 {cat}
               </ToggleButton>
             ))}
@@ -364,14 +406,13 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                 <ListItem
                   sx={{
                     borderRadius: 2,
-                    mb: 1,
-                    p: { xs: 2, sm: 1 },
-                    minHeight: { xs: 60, sm: 'auto' },
-                    background: habit.completed ? '#f1f8f4' : 'transparent',
-                    border: habit.completed ? '2px solid #4CAF50' : '2px solid #f0f0f0',
-                    transition: 'all 0.3s ease',
+                    mb: 1.5,
+                    p: 2,
+                    background: habit.completed ? 'rgba(76, 175, 80, 0.1)' : '#242424',
+                    border: habit.completed ? '1px solid rgba(76, 175, 80, 0.3)' : '1px solid #2a2a2a',
+                    transition: 'all 0.2s ease',
                     '&:hover': {
-                      background: habit.completed ? '#e8f5e9' : '#fafafa',
+                      background: habit.completed ? 'rgba(76, 175, 80, 0.15)' : '#2a2a2a',
                       transform: 'translateX(4px)',
                     },
                   }}
@@ -383,22 +424,34 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                           setEditingHabit(habit);
                           setOpenEditDialog(true);
                         }}
-                        sx={{ minWidth: { xs: 44, sm: 'auto' }, minHeight: { xs: 44, sm: 'auto' } }}
+                        sx={{ 
+                          color: '#9e9e9e',
+                          '&:hover': {
+                            color: '#ff6347',
+                            background: 'rgba(255, 99, 71, 0.1)',
+                          }
+                        }}
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
                       <IconButton 
                         size="small" 
                         onClick={() => handleDeleteHabit(habit.id)}
-                        color="error"
-                        sx={{ minWidth: { xs: 44, sm: 'auto' }, minHeight: { xs: 44, sm: 'auto' } }}
+                        sx={{ 
+                          color: '#9e9e9e',
+                          '&:hover': {
+                            color: '#f44336',
+                            background: 'rgba(244, 67, 54, 0.1)',
+                          }
+                        }}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Box>
                   }
                 >
-                  <ListItemIcon>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 80 }}>
+                    {habit.icon && getIconComponent(habit.icon)}
                     <Checkbox
                       edge="start"
                       checked={habit.completed}
@@ -406,20 +459,20 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                       icon={<RadioButtonUncheckedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
-                        color: '#bdbdbd',
+                        color: '#757575',
                         '&.Mui-checked': {
-                          color: '#4CAF50',
+                          color: '#4caf50',
                         },
                       }}
                     />
-                  </ListItemIcon>
+                  </Box>
                   <ListItemText
                     primary={
                       <Typography
                         variant="body1"
                         sx={{
                           textDecoration: habit.completed ? 'line-through' : 'none',
-                          color: habit.completed ? '#757575' : 'inherit',
+                          color: habit.completed ? '#757575' : '#e0e0e0',
                           fontWeight: habit.completed ? 400 : 500,
                         }}
                       >
@@ -452,18 +505,19 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             transition={{ type: 'spring', stiffness: 200 }}
           >
             <Paper
-              elevation={2}
+              elevation={0}
               sx={{
                 p: 2,
                 mt: 2,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
+                background: 'rgba(255, 99, 71, 0.15)',
+                color: '#ff6347',
                 textAlign: 'center',
                 borderRadius: 2,
+                border: '1px solid rgba(255, 99, 71, 0.3)',
               }}
             >
-              <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                🎉 Amazing! All habits completed today! 🎉
+              <Typography variant="h6" fontWeight={600}>
+                Amazing! All habits completed today!
               </Typography>
             </Paper>
           </motion.div>
@@ -479,11 +533,13 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
         PaperProps={{
           sx: {
             mx: { xs: 2, sm: 3 },
-            width: { xs: 'calc(100% - 32px)', sm: '100%' }
+            width: { xs: 'calc(100% - 32px)', sm: '100%' },
+            background: '#1e1e1e',
+            border: '1px solid #2a2a2a',
           }
         }}
       >
-        <DialogTitle>Add New Habit</DialogTitle>
+        <DialogTitle sx={{ color: '#e0e0e0' }}>Add New Habit</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -492,11 +548,19 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
             fullWidth
             value={newHabit.label}
             onChange={(e) => setNewHabit({ ...newHabit, label: e.target.value })}
-            placeholder="e.g., 🏋️ Workout for 30 minutes"
+            placeholder="e.g., Workout for 30 minutes"
             sx={{
               '& input': {
-                fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
-              }
+                fontSize: { xs: '16px', sm: '14px' },
+              },
+              '& .MuiOutlinedInput-root': {
+                '&:hover fieldset': {
+                  borderColor: '#ff6347',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#ff6347',
+                },
+              },
             }}
           />
           <FormControl fullWidth margin="dense">
@@ -515,8 +579,20 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
           </FormControl>
         </DialogContent>
         <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
-          <Button onClick={() => setOpenAddDialog(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
-          <Button onClick={handleAddHabit} variant="contained" sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Add</Button>
+          <Button onClick={() => setOpenAddDialog(false)} sx={{ minHeight: { xs: 44, sm: 'auto' }, color: '#9e9e9e' }}>Cancel</Button>
+          <Button 
+            onClick={handleAddHabit} 
+            variant="contained" 
+            sx={{ 
+              minHeight: { xs: 44, sm: 'auto' },
+              background: '#ff6347',
+              '&:hover': {
+                background: '#ff7f5e',
+              },
+            }}
+          >
+            Add
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -529,11 +605,13 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
         PaperProps={{
           sx: {
             mx: { xs: 2, sm: 3 },
-            width: { xs: 'calc(100% - 32px)', sm: '100%' }
+            width: { xs: 'calc(100% - 32px)', sm: '100%' },
+            background: '#1e1e1e',
+            border: '1px solid #2a2a2a',
           }
         }}
       >
-        <DialogTitle>Edit Habit</DialogTitle>
+        <DialogTitle sx={{ color: '#e0e0e0' }}>Edit Habit</DialogTitle>
         <DialogContent>
           {editingHabit && (
             <>
@@ -546,8 +624,16 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
                 onChange={(e) => setEditingHabit({ ...editingHabit, label: e.target.value })}
                 sx={{
                   '& input': {
-                    fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
-                  }
+                    fontSize: { xs: '16px', sm: '14px' },
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '&:hover fieldset': {
+                      borderColor: '#ff6347',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#ff6347',
+                    },
+                  },
                 }}
               />
               <FormControl fullWidth margin="dense">
@@ -568,8 +654,20 @@ const HabitCheckbox = ({ onProgressUpdate, userName }) => {
           )}
         </DialogContent>
         <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 2 } }}>
-          <Button onClick={() => setOpenEditDialog(false)} sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Cancel</Button>
-          <Button onClick={handleEditHabit} variant="contained" sx={{ minHeight: { xs: 44, sm: 'auto' } }}>Save</Button>
+          <Button onClick={() => setOpenEditDialog(false)} sx={{ minHeight: { xs: 44, sm: 'auto' }, color: '#9e9e9e' }}>Cancel</Button>
+          <Button 
+            onClick={handleEditHabit} 
+            variant="contained" 
+            sx={{ 
+              minHeight: { xs: 44, sm: 'auto' },
+              background: '#ff6347',
+              '&:hover': {
+                background: '#ff7f5e',
+              },
+            }}
+          >
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </motion.div>

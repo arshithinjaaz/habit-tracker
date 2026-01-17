@@ -1,10 +1,9 @@
-import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button, IconButton, Tooltip, useMediaQuery, Paper } from '@mui/material';
+import { Container, CssBaseline, ThemeProvider, createTheme, Box, Typography, Link, Button, useMediaQuery, Paper } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import WelcomeScreen from './components/WelcomeScreen';
 import MemoryLogger from './components/MemoryLogger';
 import ProgressGraph from './components/ProgressGraph';
-import HollaCharacter from './components/HollaCharacter';
 import HabitCheckbox from './components/HabitCheckbox';
 import Onboarding from './components/Onboarding';
 import QuoteOfTheDay from './components/QuoteOfTheDay';
@@ -17,39 +16,68 @@ import AdminSettings from './components/admin/AdminSettings';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const getTheme = (mode) => createTheme({
   palette: {
-    mode,
+    mode: 'dark', // Always dark theme
     primary: {
-      main: '#667eea',
+      main: '#ff6347', // Orange accent
     },
     secondary: {
-      main: '#764ba2',
+      main: '#ff7f5e',
     },
     background: {
-      default: mode === 'light' ? '#f5f7fa' : '#121212',
-      paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+      default: '#0f0f0f',
+      paper: '#1e1e1e',
     },
+    text: {
+      primary: '#e0e0e0',
+      secondary: '#9e9e9e',
+    },
+    success: {
+      main: '#4caf50',
+    },
+    error: {
+      main: '#f44336',
+    },
+    divider: '#2a2a2a',
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h4: {
-      fontWeight: 700,
+      fontWeight: 600,
+      fontSize: '24px',
     },
     h5: {
       fontWeight: 600,
+      fontSize: '20px',
+    },
+    h6: {
+      fontWeight: 500,
+      fontSize: '18px',
+    },
+    body1: {
+      fontSize: '16px',
+      fontWeight: 400,
+    },
+    body2: {
+      fontSize: '14px',
+      fontWeight: 400,
     },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 12,
           textTransform: 'none',
           fontWeight: 600,
+        },
+        contained: {
+          backgroundColor: '#ff6347',
+          '&:hover': {
+            backgroundColor: '#ff7f5e',
+          },
         },
       },
     },
@@ -57,6 +85,7 @@ const getTheme = (mode) => createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
+          backgroundImage: 'none',
         },
       },
     },
@@ -70,24 +99,12 @@ function MainApp() {
   const [habitProgress, setHabitProgress] = useState(0);
   const [hollaMood, setHollaMood] = useState('happy');
   const [hollaMessage, setHollaMessage] = useState("Let's build great habits together!");
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
-  });
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
 
-  const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+  const theme = useMemo(() => getTheme('dark'), []); // Always use dark theme
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const toggleDarkMode = () => {
-    setDarkMode(prev => {
-      const newMode = !prev;
-      localStorage.setItem('darkMode', JSON.stringify(newMode));
-      return newMode;
-    });
-  };
 
   // Check for existing user on mount
   useEffect(() => {
@@ -112,11 +129,11 @@ function MainApp() {
     setLoginMode('login');
   };
 
-  // Update Holla's mood and message based on habit progress
+  // Update message based on habit progress (no emojis)
   useEffect(() => {
     if (habitProgress === 100) {
       setHollaMood('excited');
-      setHollaMessage("🎉 WOW! You completed everything! You're amazing!");
+      setHollaMessage("Amazing! You completed everything today!");
     } else if (habitProgress >= 70) {
       setHollaMood('proud');
       setHollaMessage("You're doing fantastic! Keep up the great work!");
@@ -128,7 +145,7 @@ function MainApp() {
       setHollaMessage("Every step counts! Let's keep going together!");
     } else {
       setHollaMood('encouraging');
-      setHollaMessage("Ready to start today's journey? I'm here with you!");
+      setHollaMessage("Ready to start today's journey? Let's do this!");
     }
   }, [habitProgress]);
 
@@ -155,62 +172,37 @@ function MainApp() {
       <Box 
         sx={{ 
           minHeight: '100vh', 
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: '#0f0f0f',
           py: 4,
-          position: 'relative',
-          overflow: 'hidden',
         }}
       >
-        {/* Decorative background circles */}
-        {[...Array(3)].map((_, i) => (
-          <Box
-            key={i}
-            sx={{
-              position: 'absolute',
-              width: `${200 + i * 100}px`,
-              height: `${200 + i * 100}px`,
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.05)',
-              top: `${-50 + i * 30}%`,
-              right: `${-10 + i * 20}%`,
-              pointerEvents: 'none',
-            }}
-          />
-        ))}
-
-        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
+        <Container maxWidth="xl">
           {/* Header */}
           <Paper
-            elevation={8}
+            elevation={0}
             sx={{ 
               mb: { xs: 2, md: 4 },
-              textAlign: 'center', 
-              position: 'relative',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 4,
+              background: '#1e1e1e',
+              borderRadius: 3,
               p: { xs: 2, md: 3 },
-              boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+              border: '1px solid #2a2a2a',
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-              <HollaCharacter mood={hollaMood} />
-            </Box>
-            
             <Typography
               variant={isMobile ? 'h5' : 'h4'}
               sx={{
-                fontWeight: 'bold',
-                color: 'text.primary',
+                fontWeight: 600,
+                color: '#e0e0e0',
                 mb: 1,
               }}
             >
-              Welcome back, {currentUser}! 👋
+              Welcome back, {currentUser}
             </Typography>
             <Typography 
               variant={isMobile ? 'body1' : 'h6'}
               sx={{ 
-                color: '#667eea',
-                fontWeight: 500,
+                color: '#9e9e9e',
+                fontWeight: 400,
                 mb: 2,
                 px: { xs: 1, md: 0 },
               }}
@@ -218,47 +210,29 @@ function MainApp() {
               {hollaMessage}
             </Typography>
             
-            {/* Dark Mode & Logout Buttons */}
+            {/* Logout Button */}
             <Box sx={{ 
-              position: { xs: 'relative', md: 'absolute' },
-              right: { md: 16 },
-              top: { md: 16 },
               display: 'flex', 
               gap: 1,
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               mt: { xs: 2, md: 0 },
             }}>
-              <Tooltip title={darkMode ? 'Light Mode' : 'Dark Mode'}>
-                <IconButton 
-                  onClick={toggleDarkMode}
-                  aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-                  sx={{
-                    color: '#667eea',
-                    '&:hover': {
-                      background: 'rgba(102,126,234,0.1)',
-                    },
-                  }}
-                >
-                  {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-                </IconButton>
-              </Tooltip>
               <Button
                 variant="outlined"
                 startIcon={!isMobile && <LogoutIcon />}
                 onClick={handleLogout}
                 aria-label="Logout"
                 sx={{
-                  borderRadius: 3,
+                  borderRadius: 2,
                   textTransform: 'none',
-                  borderColor: '#667eea',
-                  color: '#667eea',
-                  fontWeight: 600,
+                  borderColor: '#2a2a2a',
+                  color: '#e0e0e0',
+                  fontWeight: 500,
                   '&:hover': {
-                    borderColor: '#764ba2',
-                    background: 'rgba(102,126,234,0.1)',
-                    transform: 'translateY(-2px)',
+                    borderColor: '#ff6347',
+                    background: 'rgba(255, 99, 71, 0.1)',
                   },
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.2s ease',
                 }}
               >
                 {isMobile ? <LogoutIcon /> : 'Logout'}
@@ -287,17 +261,18 @@ function MainApp() {
 
           {/* Footer */}
           <Paper
-            elevation={2}
+            elevation={0}
             sx={{ 
               mt: { xs: 3, md: 4 },
               textAlign: 'center',
-              backdropFilter: 'blur(10px)',
+              background: '#1e1e1e',
               borderRadius: 3,
               p: 2,
+              border: '1px solid #2a2a2a',
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              Built with ❤️ for better habits |{' '}
+              Built for better habits |{' '}
               <Link
                 href="https://github.com"
                 target="_blank"
@@ -307,7 +282,7 @@ function MainApp() {
                   display: 'inline-flex', 
                   alignItems: 'center', 
                   gap: 0.5,
-                  color: '#667eea',
+                  color: '#ff6347',
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'underline',
@@ -326,12 +301,7 @@ function MainApp() {
 }
 
 function App() {
-  const [darkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
-  });
-
-  const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+  const theme = useMemo(() => getTheme('dark'), []); // Always dark theme
 
   return (
     <Router>
