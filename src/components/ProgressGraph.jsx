@@ -130,8 +130,8 @@ const ProgressGraph = ({ userName }) => {
       {
         label: 'Daily Habit Score (%)',
         data: filteredData.map((d) => d.score),
-        borderColor: 'rgb(102, 126, 234)',
-        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+        borderColor: '#ff6347',
+        backgroundColor: 'rgba(255, 99, 71, 0.2)',
         tension: 0.4,
         fill: true,
       },
@@ -216,7 +216,7 @@ const ProgressGraph = ({ userName }) => {
             p: 3,
             mb: 3,
             borderRadius: 3,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: '#1e1e1e',
             color: 'white',
           }}
         >
@@ -341,7 +341,7 @@ const ProgressGraph = ({ userName }) => {
             sx={{
               p: 6,
               textAlign: 'center',
-              background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+              background: '#2a2a2a',
               borderRadius: 2,
               minHeight: 300,
               display: 'flex',
@@ -351,7 +351,7 @@ const ProgressGraph = ({ userName }) => {
             }}
           >
             <Typography variant="h2" sx={{ mb: 2 }}>
-              📊
+              
             </Typography>
             <Typography variant="h6" color="text.primary" gutterBottom>
               No Data Yet

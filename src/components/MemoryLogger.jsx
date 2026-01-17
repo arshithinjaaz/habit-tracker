@@ -185,7 +185,7 @@ const MemoryLogger = ({ userName }) => {
               sx={{
                 p: 4,
                 borderRadius: 4,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: '#1e1e1e',
                 color: 'white',
                 textAlign: 'center',
                 minWidth: 300,
@@ -196,7 +196,7 @@ const MemoryLogger = ({ userName }) => {
                 transition={{ duration: 0.5, repeat: 3 }}
               >
                 <Typography variant="h3" sx={{ mb: 1 }}>
-                  ✨📝✨
+                  ✨✨
                 </Typography>
               </motion.div>
               <Typography variant="h6" fontWeight="bold">
@@ -356,12 +356,12 @@ const MemoryLogger = ({ userName }) => {
               sx={{
                 p: 4,
                 textAlign: 'center',
-                background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                background: '#2a2a2a',
                 borderRadius: 2,
               }}
             >
               <Typography variant="h6" color="text.secondary" gutterBottom>
-                📝
+                
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 No memories yet. Start capturing your precious moments!
@@ -384,7 +384,7 @@ const MemoryLogger = ({ userName }) => {
                       mb: 2,
                       borderRadius: 2,
                       overflow: 'hidden',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: '#1e1e1e',
                     }}
                   >
                     <Box
@@ -438,7 +438,7 @@ const MemoryLogger = ({ userName }) => {
                                 mb: 2,
                                 p: 2,
                                 borderRadius: 2,
-                                background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+                                background: '#2a2a2a',
                                 border: '2px solid',
                                 borderColor: 'primary.light',
                                 borderLeftWidth: 6,
@@ -461,7 +461,7 @@ const MemoryLogger = ({ userName }) => {
                                         fontSize: '1rem',
                                       }}
                                     >
-                                      📖
+                                      
                                     </Avatar>
                                     <Box>
                                       <Box display="flex" gap={1} alignItems="center">
@@ -571,7 +571,7 @@ const MemoryLogger = ({ userName }) => {
               }
             }}
             InputProps={{
-              startAdornment: <span style={{ marginRight: 8 }}>📧</span>
+              startAdornment: <EmailIcon sx={{ color: '#ff6347' }} />
             }}
           />
           <FormControlLabel

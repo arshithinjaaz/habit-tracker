@@ -22,16 +22,20 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const getTheme = (mode) => createTheme({
   palette: {
-    mode,
+    mode: 'dark',
     primary: {
-      main: '#667eea',
+      main: '#ff6347',
     },
     secondary: {
-      main: '#764ba2',
+      main: '#ff6347',
     },
     background: {
-      default: mode === 'light' ? '#f5f7fa' : '#121212',
-      paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+      default: '#0f0f0f',
+      paper: '#1e1e1e',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#a0a0a0',
     },
   },
   typography: {
@@ -57,6 +61,7 @@ const getTheme = (mode) => createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
+          backgroundColor: '#1e1e1e',
         },
       },
     },
@@ -70,23 +75,16 @@ function MainApp() {
   const [habitProgress, setHabitProgress] = useState(0);
   const [hollaMood, setHollaMood] = useState('happy');
   const [hollaMessage, setHollaMessage] = useState("Let's build great habits together!");
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
-  });
+  const [darkMode, setDarkMode] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
 
-  const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+  const theme = useMemo(() => getTheme('dark'), []);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const toggleDarkMode = () => {
-    setDarkMode(prev => {
-      const newMode = !prev;
-      localStorage.setItem('darkMode', JSON.stringify(newMode));
-      return newMode;
-    });
+    // Dark mode is now permanent - no toggle needed
   };
 
   // Run migrations on mount
@@ -126,7 +124,7 @@ function MainApp() {
   useEffect(() => {
     if (habitProgress === 100) {
       setHollaMood('excited');
-      setHollaMessage("🎉 WOW! You completed everything! You're amazing!");
+      setHollaMessage("WOW! You completed everything! You're amazing!");
     } else if (habitProgress >= 70) {
       setHollaMood('proud');
       setHollaMessage("You're doing fantastic! Keep up the great work!");
@@ -165,28 +163,12 @@ function MainApp() {
       <Box 
         sx={{ 
           minHeight: '100vh', 
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          backgroundColor: '#0f0f0f',
           py: 4,
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Decorative background circles */}
-        {[...Array(3)].map((_, i) => (
-          <Box
-            key={i}
-            sx={{
-              position: 'absolute',
-              width: `${200 + i * 100}px`,
-              height: `${200 + i * 100}px`,
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.05)',
-              top: `${-50 + i * 30}%`,
-              right: `${-10 + i * 20}%`,
-              pointerEvents: 'none',
-            }}
-          />
-        ))}
 
         <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
           {/* Header */}
@@ -214,12 +196,12 @@ function MainApp() {
                 mb: 1,
               }}
             >
-              Welcome back, {currentUser}! 👋
+              Welcome back, {currentUser}!
             </Typography>
             <Typography 
               variant={isMobile ? 'body1' : 'h6'}
               sx={{ 
-                color: '#667eea',
+                color: '#ff6347',
                 fontWeight: 500,
                 mb: 2,
                 px: { xs: 1, md: 0 },
@@ -243,9 +225,9 @@ function MainApp() {
                   onClick={toggleDarkMode}
                   aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                   sx={{
-                    color: '#667eea',
+                    color: '#ff6347',
                     '&:hover': {
-                      background: 'rgba(102,126,234,0.1)',
+                      background: 'rgba(255,99,71,0.1)',
                     },
                   }}
                 >
@@ -260,12 +242,12 @@ function MainApp() {
                 sx={{
                   borderRadius: 3,
                   textTransform: 'none',
-                  borderColor: '#667eea',
-                  color: '#667eea',
+                  borderColor: '#ff6347',
+                  color: '#ff6347',
                   fontWeight: 600,
                   '&:hover': {
-                    borderColor: '#764ba2',
-                    background: 'rgba(102,126,234,0.1)',
+                    borderColor: '#ff6347',
+                    background: 'rgba(255,99,71,0.1)',
                     transform: 'translateY(-2px)',
                   },
                   transition: 'all 0.3s ease',
@@ -307,7 +289,7 @@ function MainApp() {
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              Built with ❤️ for better habits |{' '}
+              Built with passion for better habits |{' '}
               <Link
                 href="https://github.com"
                 target="_blank"
@@ -317,7 +299,7 @@ function MainApp() {
                   display: 'inline-flex', 
                   alignItems: 'center', 
                   gap: 0.5,
-                  color: '#667eea',
+                  color: '#ff6347',
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'underline',
@@ -336,12 +318,7 @@ function MainApp() {
 }
 
 function App() {
-  const [darkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
-  });
-
-  const theme = useMemo(() => getTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+  const theme = useMemo(() => getTheme('dark'), []);
 
   return (
     <Router>
