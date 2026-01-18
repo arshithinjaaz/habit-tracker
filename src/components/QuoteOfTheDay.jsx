@@ -1,229 +1,248 @@
 import { useMemo } from 'react';
-import { Box, Typography, Paper, Chip } from '@mui/material';
+import { Box, Typography, Paper, Chip, useTheme, useMediaQuery } from '@mui/material';
 import { motion } from 'framer-motion';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
-// Comprehensive quotes database organized by category
-const quotesDatabase = {
-  Love: [
-    "Love is not about possession. Love is about appreciation.",
-    "The best thing to hold onto in life is each other.",
-    "Where there is love there is life.",
-    "Love is the bridge between you and everything.",
-    "Love recognizes no barriers.",
-    "Love is composed of a single soul inhabiting two bodies.",
-    "To love and be loved is to feel the sun from both sides.",
-    "Love is when the other person's happiness is more important than your own.",
-    "Love is not finding someone to live with, it's finding someone you can't live without.",
-    "The greatest happiness of life is the conviction that we are loved.",
-    "Love is the master key that opens the gates of happiness.",
-    "Love is a friendship set to music.",
-    "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.",
-    "Love is not about how much you say 'I love you', but how much you prove that it's true.",
-    "Love doesn't make the world go round. Love is what makes the ride worthwhile.",
-    "The art of love is largely the art of persistence.",
-    "Love is the only force capable of transforming an enemy into a friend.",
-    "Love is that condition in which the happiness of another person is essential to your own.",
-    "Love is like the wind, you can't see it but you can feel it.",
-    "The best and most beautiful things in this world cannot be seen or even heard, but must be felt with the heart.",
-    "Love is not what you say. Love is what you do.",
-    "True love stories never have endings.",
-    "Love is patient, love is kind.",
-    "Love is the greatest refreshment in life.",
-    "Where love is, there God is also.",
-  ],
-  Life: [
-    "Life is what happens when you're busy making other plans.",
-    "The purpose of our lives is to be happy.",
-    "Life is really simple, but we insist on making it complicated.",
-    "In the end, it's not the years in your life that count. It's the life in your years.",
-    "Life is a journey, not a destination.",
-    "The only impossible journey is the one you never begin.",
-    "Life isn't about finding yourself. Life is about creating yourself.",
-    "Your time is limited, don't waste it living someone else's life.",
-    "Life is made of ever so many partings welded together.",
-    "The good life is one inspired by love and guided by knowledge.",
-    "Life is not measured by the number of breaths we take, but by the moments that take our breath away.",
-    "Life is a succession of lessons which must be lived to be understood.",
-    "Life is either a daring adventure or nothing at all.",
-    "The biggest adventure you can take is to live the life of your dreams.",
-    "Life is short, and it is up to you to make it sweet.",
-    "Life is a mirror and will reflect back to the thinker what he thinks into it.",
-    "Life is about making an impact, not making an income.",
-    "Life is a series of natural and spontaneous changes. Don't resist them.",
-    "The purpose of life is not to be happy. It is to be useful, to be honorable, to be compassionate.",
-    "Life is too important to be taken seriously.",
-    "Life is like riding a bicycle. To keep your balance, you must keep moving.",
-    "Life is a long lesson in humility.",
-    "The unexamined life is not worth living.",
-    "Life shrinks or expands in proportion to one's courage.",
-    "In three words I can sum up everything I've learned about life: it goes on.",
-  ],
-  Patience: [
-    "Patience is not the ability to wait, but the ability to keep a good attitude while waiting.",
-    "All good things come to those who wait.",
-    "Patience is bitter, but its fruit is sweet.",
-    "Rivers know this: there is no hurry. We shall get there someday.",
-    "Patience and perseverance have a magical effect before which difficulties disappear.",
-    "The key to everything is patience. You get the chicken by hatching the egg, not by smashing it.",
-    "Patience is the companion of wisdom.",
-    "Genius is nothing but a greater aptitude for patience.",
-    "Have patience with all things, but first of all with yourself.",
-    "Patience is power. Patience is not an absence of action; rather it is timing.",
-    "One moment of patience may ward off great disaster. One moment of impatience may ruin a whole life.",
-    "Patience attracts happiness; it brings near that which is far.",
-    "Trees that are slow to grow bear the best fruit.",
-    "Patience is the calm acceptance that things can happen in a different order than the one you have in mind.",
-    "The two most powerful warriors are patience and time.",
-    "Patience is a virtue, and I'm learning patience. It's a tough lesson.",
-    "Adopt the pace of nature: her secret is patience.",
-    "Patience is waiting. Not passively waiting. That is laziness. But to keep going when the going is hard.",
-    "Have patience. All things are difficult before they become easy.",
-    "Patience is not simply the ability to wait - it's how we behave while we're waiting.",
-    "Patience and silence are the strengths of the weak and the weaknesses of the strong.",
-    "With love and patience, nothing is impossible.",
-    "Patience is the art of concealing your impatience.",
-    "The practice of patience guards us against losing our presence of mind.",
-    "Patience is the best remedy for every trouble.",
-  ],
-  Time: [
-    "Time is what we want most, but what we use worst.",
-    "The bad news is time flies. The good news is you're the pilot.",
-    "Lost time is never found again.",
-    "Time is more valuable than money. You can get more money, but you cannot get more time.",
-    "Time you enjoy wasting is not wasted time.",
-    "Time is a created thing. To say 'I don't have time' is to say 'I don't want to'.",
-    "The trouble is, you think you have time.",
-    "Time is the most valuable thing a man can spend.",
-    "Time is the longest distance between two places.",
-    "Time flies over us, but leaves its shadow behind.",
-    "Time changes everything except something within us which is always surprised by change.",
-    "Time is what keeps everything from happening at once.",
-    "Time and tide wait for no man.",
-    "They always say time changes things, but you actually have to change them yourself.",
-    "Time is free, but it's priceless. You can't own it, but you can use it.",
-    "Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present.",
-    "Time waits for no one.",
-    "The future is something which everyone reaches at the rate of sixty minutes an hour.",
-    "Time is a gift that most of us take for granted.",
-    "Time is the wisest counselor of all.",
-    "Time is the school in which we learn, time is the fire in which we burn.",
-    "Better three hours too soon than a minute too late.",
-    "Time spent with family is worth every second.",
-    "The key is in not spending time, but in investing it.",
-    "Make use of time, let not advantage slip.",
-  ],
-};
-
-// Create motion component outside to avoid recreating on every render
-const MotionPaper = motion(Paper);
-
+// Curated inspirational quotes for habit building
+const inspirationalQuotes = [
+  {
+    quote: "Excellence isn't a skill, it's an attitude.",
+    author: "Ralph Marston",
+    category: "Excellence"
+  },
+  {
+    quote: "Success is the sum of small efforts repeated day in and day out.",
+    author: "Robert Collier",
+    category: "Success"
+  },
+  {
+    quote: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+    author: "Aristotle",
+    category: "Habits"
+  },
+  {
+    quote: "The secret of change is to focus all of your energy on building the new.",
+    author: "Socrates",
+    category: "Growth"
+  },
+  {
+    quote: "Your future is created by what you do today, not tomorrow.",
+    author: "Robert Kiyosaki",
+    category: "Action"
+  },
+  {
+    quote: "Progress not perfection. Small steps lead to big changes.",
+    author: "Unknown",
+    category: "Progress"
+  },
+  {
+    quote: "The journey of a thousand miles begins with a single step.",
+    author: "Lao Tzu",
+    category: "Journey"
+  },
+  {
+    quote: "Discipline is choosing between what you want now and what you want most.",
+    author: "Abraham Lincoln",
+    category: "Discipline"
+  },
+  {
+    quote: "Champions don't become champions in the ring. They become champions in their training.",
+    author: "Muhammad Ali",
+    category: "Training"
+  },
+  {
+    quote: "Success isn't about luck. It's about preparation meeting opportunity.",
+    author: "Harvey Specter",
+    category: "Success"
+  }
+];
 const QuoteOfTheDay = () => {
-  // Get quote based on day of year to ensure same quote throughout the day
-  const { quote, category } = useMemo(() => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
+  // Select a random quote based on the day to ensure consistency throughout the day
+  const todaysQuote = useMemo(() => {
     const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    
-    // Flatten all quotes into a single array with category information
-    const allQuotes = Object.entries(quotesDatabase).flatMap(([cat, quotes]) =>
-      quotes.map(quote => ({ quote, category: cat }))
-    );
-    
-    // Use day of year to select quote (will be same all day)
-    const selectedQuote = allQuotes[dayOfYear % allQuotes.length];
-    
-    return selectedQuote;
+    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    return inspirationalQuotes[dayOfYear % inspirationalQuotes.length];
   }, []);
 
-  const getCategoryColor = (category) => {
-    return '#ff6347';
-  };
-
   return (
-    <MotionPaper
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      elevation={3}
-      sx={{
-        p: 3,
-        mb: 3,
-        position: 'relative',
-        overflow: 'hidden',
-        background: `linear-gradient(135deg, ${getCategoryColor(category)}15 0%, ${getCategoryColor(category)}05 100%)`,
-        borderLeft: `4px solid ${getCategoryColor(category)}`,
-      }}
+      transition={{ duration: 0.8, delay: 0.2 }}
     >
-      {/* Decorative quote icon */}
-      <Box
+      <Paper
+        elevation={4}
         sx={{
-          position: 'absolute',
-          top: -10,
-          right: -10,
-          opacity: 0.1,
-          transform: 'rotate(180deg)',
-        }}
-      >
-        <FormatQuoteIcon sx={{ fontSize: 120, color: getCategoryColor(category) }} />
-      </Box>
-
-      {/* Category chip */}
-      <Box sx={{ mb: 2 }}>
-        <Chip
-          label={category}
-          size="small"
-          sx={{
-            bgcolor: getCategoryColor(category),
-            color: 'white',
-            fontWeight: 600,
-            fontSize: '0.75rem',
-          }}
-        />
-      </Box>
-
-      {/* Quote text */}
-      <Typography
-        variant="h6"
-        sx={{
-          fontStyle: 'italic',
-          color: 'text.primary',
-          lineHeight: 1.6,
           position: 'relative',
-          fontWeight: 500,
+          overflow: 'hidden',
+          background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
+          border: '1px solid rgba(255, 99, 71, 0.2)',
+          borderRadius: { xs: 3, md: 4 },
+          p: { xs: 3, md: 4 },
+          mb: { xs: 2, md: 3 },
+          mx: { xs: 0.5, sm: 0 },
           '&::before': {
-            content: '"\u201C"',
+            content: '""',
             position: 'absolute',
-            left: -16,
-            top: -8,
-            fontSize: '2rem',
-            color: getCategoryColor(category),
-            opacity: 0.5,
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: 'linear-gradient(90deg, #ff6347, #ff8570, #ffa07a)',
           },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '100px',
+            height: '100px',
+            background: 'radial-gradient(circle, rgba(255,99,71,0.1) 0%, transparent 70%)',
+            borderRadius: '50%',
+            transform: 'translate(50%, -50%)',
+          }
         }}
       >
-        {quote}
-      </Typography>
+        {/* Decorative Quote Icon */}
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          style={{
+            position: 'absolute',
+            top: isMobile ? 16 : 20,
+            right: isMobile ? 16 : 24,
+            zIndex: 1,
+          }}
+        >
+          <Box
+            sx={{
+              width: { xs: 40, md: 50 },
+              height: { xs: 40, md: 50 },
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #ff6347, #ff8570)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 8px 24px rgba(255, 99, 71, 0.3)',
+            }}
+          >
+            <FormatQuoteIcon 
+              sx={{ 
+                fontSize: { xs: 20, md: 24 }, 
+                color: 'white',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+              }} 
+            />
+          </Box>
+        </motion.div>
 
-      {/* Footer */}
-      <Typography
-        variant="caption"
-        sx={{
-          display: 'block',
-          mt: 2,
-          color: 'text.secondary',
-          fontStyle: 'italic',
-        }}
-      >
-        Quote of the Day • {new Date().toLocaleDateString('en-US', { 
-          month: 'long', 
-          day: 'numeric', 
-          year: 'numeric' 
-        })}
-      </Typography>
-    </MotionPaper>
+        {/* Quote Category Badge */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <AutoAwesomeIcon sx={{ fontSize: 16, color: '#ff6347' }} />
+            <Chip
+              label={todaysQuote.category}
+              size="small"
+              sx={{
+                backgroundColor: 'rgba(255, 99, 71, 0.15)',
+                color: '#ff6347',
+                fontWeight: 600,
+                fontSize: '0.75rem',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 99, 71, 0.3)',
+              }}
+            />
+          </Box>
+        </motion.div>
+
+        {/* Quote Text */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <Typography
+            variant={isMobile ? 'h6' : 'h5'}
+            sx={{
+              fontStyle: 'italic',
+              color: '#ffffff',
+              lineHeight: { xs: 1.5, md: 1.6 },
+              fontWeight: 500,
+              mb: 3,
+              position: 'relative',
+              fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' },
+              pr: { xs: 6, md: 8 }, // Space for floating quote icon
+              '&::before': {
+                content: '"\u201C"',
+                position: 'absolute',
+                left: -8,
+                top: -4,
+                fontSize: { xs: '2.5rem', md: '3rem' },
+                color: '#ff6347',
+                opacity: 0.7,
+                fontFamily: 'serif',
+              },
+            }}
+          >
+            {todaysQuote.quote}
+          </Typography>
+        </motion.div>
+
+        {/* Author & Date */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'space-between', 
+              alignItems: { xs: 'flex-start', sm: 'center' },
+              gap: { xs: 1, sm: 0 },
+              pt: 2,
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#ff6347',
+                fontWeight: 600,
+                fontSize: { xs: '0.875rem', md: '0.95rem' },
+              }}
+            >
+              — {todaysQuote.author}
+            </Typography>
+            
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontStyle: 'italic',
+                fontSize: { xs: '0.75rem', md: '0.8rem' },
+              }}
+            >
+              Inspiration of the Day • {new Date().toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
+            </Typography>
+          </Box>
+        </motion.div>
+      </Paper>
+    </motion.div>
   );
 };
 

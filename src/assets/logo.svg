@@ -1,0 +1,38 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black Background -->
+  <rect width="256" height="256" fill="#0f0f0f"/>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6347;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8570;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- First Play Button (left) with rounded corners -->
+  <path d="M 30 40 C 20 40 20 50 20 60 L 20 196 C 20 210 28 220 40 220 C 50 220 60 210 60 196 L 60 128 L 140 60 C 145 55 150 60 145 65 L 65 128 L 145 191 C 150 196 145 201 140 196 L 60 128 L 60 60 C 60 50 50 40 40 40 C 28 40 20 50 20 60 Z" 
+        fill="url(#orangeGradient)" 
+        stroke="url(#orangeGradient)" 
+        stroke-width="2" 
+        stroke-linejoin="round"/>
+  
+  <!-- Using proper polygon for play button -->
+  <polygon points="20,60 20,196 120,128" 
+           fill="url(#orangeGradient)" 
+           stroke="url(#orangeGradient)" 
+           stroke-width="2" 
+           stroke-linecap="round" 
+           stroke-linejoin="round"/>
+  
+  <!-- Second Play Button (center) with rounded corners -->
+  <polygon points="110,60 110,196 210,128" 
+           fill="url(#orangeGradient)" 
+           stroke="url(#orangeGradient)" 
+           stroke-width="2" 
+           stroke-linecap="round" 
+           stroke-linejoin="round"/>
+  
+  <!-- Vertical Pause Bar (right) with rounded corners -->
+  <rect x="225" y="65" width="20" height="126" fill="url(#orangeGradient)" rx="10" ry="10"/>
+</svg>

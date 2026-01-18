@@ -213,52 +213,163 @@ const ProgressGraph = ({ userName }) => {
         <Paper
           elevation={8}
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             mb: 3,
-            borderRadius: 3,
-            background: '#1e1e1e',
+            borderRadius: { xs: 3, md: 4 },
+            background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
+            border: '1px solid rgba(255, 99, 71, 0.2)',
             color: 'white',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '3px',
+              background: 'linear-gradient(90deg, #ff6347, #ff8570, #ffa07a)',
+            },
           }}
         >
-          <Box display="flex" alignItems="center" gap={1} mb={2}>
-            <AssessmentIcon sx={{ fontSize: 32 }} />
-            <Typography variant="h5" fontWeight="bold">
+          <Box display="flex" alignItems="center" gap={1} mb={3}>
+            <AssessmentIcon sx={{ fontSize: { xs: 28, md: 32 }, color: '#ff6347' }} />
+            <Typography 
+              variant="h5" 
+              fontWeight="bold"
+              sx={{
+                fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
+                color: '#ff6347',
+                letterSpacing: '-0.02em'
+              }}
+            >
               Weekly Summary
             </Typography>
           </Box>
-          <Grid container spacing={2}>
-            <Grid item xs={6} sm={4}>
-              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
-                <Typography variant="h4" fontWeight="bold">{weeklyStats.avgScore}%</Typography>
-                <Typography variant="body2">Average</Typography>
+          <Grid container spacing={{ xs: 1.5, sm: 2 }}>
+            <Grid item xs={4}>
+              <Paper sx={{ 
+                p: { xs: 1.5, sm: 2 }, 
+                textAlign: 'center', 
+                background: 'rgba(255, 99, 71, 0.15)',
+                border: '1px solid rgba(255, 99, 71, 0.3)',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(255, 99, 71, 0.2)'
+                }
+              }}>
+                <Typography variant="h4" fontWeight="bold" sx={{ 
+                  fontSize: { xs: '1.5rem', sm: '2rem' },
+                  color: '#ff6347'
+                }}>
+                  {weeklyStats.avgScore}%
+                </Typography>
+                <Typography variant="body2" sx={{ 
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 500
+                }}>
+                  Average
+                </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6} sm={4}>
-              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
-                <Typography variant="h4" fontWeight="bold">{weeklyStats.perfectDays}</Typography>
-                <Typography variant="body2">Perfect Days</Typography>
+            <Grid item xs={4}>
+              <Paper sx={{ 
+                p: { xs: 1.5, sm: 2 }, 
+                textAlign: 'center', 
+                background: 'rgba(255, 99, 71, 0.15)',
+                border: '1px solid rgba(255, 99, 71, 0.3)',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(255, 99, 71, 0.2)'
+                }
+              }}>
+                <Typography variant="h4" fontWeight="bold" sx={{ 
+                  fontSize: { xs: '1.5rem', sm: '2rem' },
+                  color: '#ff6347'
+                }}>
+                  {weeklyStats.perfectDays}
+                </Typography>
+                <Typography variant="body2" sx={{ 
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 500
+                }}>
+                  Perfect Days
+                </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6} sm={4}>
-              <Paper sx={{ p: 2, textAlign: 'center', background: 'rgba(255,255,255,0.15)' }}>
+            <Grid item xs={4}>
+              <Paper sx={{ 
+                p: { xs: 1.5, sm: 2 }, 
+                textAlign: 'center', 
+                background: 'rgba(255, 99, 71, 0.15)',
+                border: '1px solid rgba(255, 99, 71, 0.3)',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(255, 99, 71, 0.2)'
+                }
+              }}>
                 <Box display="flex" alignItems="center" justifyContent="center" gap={0.5}>
-                  <Typography variant="h4" fontWeight="bold">{Math.abs(weeklyStats.trend)}%</Typography>
-                  {weeklyStats.trend >= 0 ? <TrendingUpIcon /> : <TrendingDownIcon />}
+                  <Typography variant="h4" fontWeight="bold" sx={{ 
+                    fontSize: { xs: '1.5rem', sm: '2rem' },
+                    color: '#ff6347'
+                  }}>
+                    {Math.abs(weeklyStats.trend)}%
+                  </Typography>
+                  {weeklyStats.trend >= 0 ? 
+                    <TrendingUpIcon sx={{ color: '#4caf50', fontSize: { xs: 20, sm: 24 } }} /> : 
+                    <TrendingDownIcon sx={{ color: '#f44336', fontSize: { xs: 20, sm: 24 } }} />
+                  }
                 </Box>
-                <Typography variant="body2">Trend</Typography>
+                <Typography variant="body2" sx={{ 
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontWeight: 500
+                }}>
+                  Trend
+                </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Chip 
-                icon={<EmojiEventsIcon />}
+                icon={<EmojiEventsIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />}
                 label={`Best: ${weeklyStats.bestDay.date} (${weeklyStats.bestDay.score}%)`}
-                sx={{ width: '100%', bgcolor: 'rgba(76, 175, 80, 0.9)', color: 'white', fontWeight: 'bold' }}
+                sx={{ 
+                  width: '100%', 
+                  minHeight: { xs: 44, sm: 40 },
+                  bgcolor: 'rgba(76, 175, 80, 0.9)', 
+                  color: 'white', 
+                  fontWeight: 'bold',
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  borderRadius: 2,
+                  '& .MuiChip-label': {
+                    px: 2
+                  }
+                }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Chip 
                 label={`Needs Work: ${weeklyStats.worstDay.date} (${weeklyStats.worstDay.score}%)`}
-                sx={{ width: '100%', bgcolor: 'rgba(244, 67, 54, 0.9)', color: 'white', fontWeight: 'bold' }}
+                sx={{ 
+                  width: '100%', 
+                  minHeight: { xs: 44, sm: 40 },
+                  bgcolor: 'rgba(244, 67, 54, 0.9)', 
+                  color: 'white', 
+                  fontWeight: 'bold',
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  borderRadius: 2,
+                  '& .MuiChip-label': {
+                    px: 2
+                  }
+                }}
               />
             </Grid>
           </Grid>
@@ -275,63 +386,222 @@ const ProgressGraph = ({ userName }) => {
           boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
         }}
       >
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={3} flexWrap="wrap" gap={2}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <TrendingUpIcon color="primary" sx={{ fontSize: 32 }} />
-            <Typography variant="h5" fontWeight="bold">
+        {/* Progress Insights Header */}
+        <Box sx={{ mb: 3 }}>
+          <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <TrendingUpIcon color="primary" sx={{ fontSize: { xs: 28, md: 32 } }} />
+            <Typography 
+              variant="h5" 
+              fontWeight="bold"
+              sx={{ 
+                fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
+                color: '#ff6347',
+                letterSpacing: '-0.02em'
+              }}
+            >
               Progress Insights
             </Typography>
           </Box>
 
-          <Box display="flex" gap={2} alignItems="center" flexWrap="wrap">
-            <ToggleButtonGroup
-              value={timePeriod}
-              exclusive
-              onChange={(e, newPeriod) => newPeriod && setTimePeriod(newPeriod)}
-              size="small"
-              aria-label="time period"
-            >
-              <ToggleButton value="week" aria-label="1 week">
-                1 Week
-              </ToggleButton>
-              <ToggleButton value="2weeks" aria-label="2 weeks">
-                2 Weeks
-              </ToggleButton>
-              <ToggleButton value="3weeks" aria-label="3 weeks">
-                3 Weeks
-              </ToggleButton>
-              <ToggleButton value="month" aria-label="1 month">
-                Month
-              </ToggleButton>
-            </ToggleButtonGroup>
+          {/* Mobile-First Controls Layout */}
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            gap: 2,
+          }}>
+            {/* Time Period Selector */}
+            <Box>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  display: 'block',
+                  mb: 1,
+                  color: 'text.secondary',
+                  fontWeight: 500,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  fontSize: '0.75rem'
+                }}
+              >
+                Time Period
+              </Typography>
+              <ToggleButtonGroup
+                value={timePeriod}
+                exclusive
+                onChange={(e, newPeriod) => newPeriod && setTimePeriod(newPeriod)}
+                size="small"
+                aria-label="time period"
+                sx={{
+                  display: 'flex',
+                  width: '100%',
+                  '& .MuiToggleButton-root': {
+                    flex: 1,
+                    minHeight: { xs: 44, sm: 40 },
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    fontWeight: 600,
+                    border: '1px solid rgba(255, 99, 71, 0.3)',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    borderRadius: '8px',
+                    mx: 0.25,
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:first-of-type': {
+                      ml: 0,
+                      borderTopLeftRadius: '12px',
+                      borderBottomLeftRadius: '12px',
+                    },
+                    '&:last-of-type': {
+                      mr: 0,
+                      borderTopRightRadius: '12px',
+                      borderBottomRightRadius: '12px',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#ff6347',
+                      color: 'white',
+                      borderColor: '#ff6347',
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
+                      '&:hover': {
+                        backgroundColor: '#ff6347',
+                      },
+                    },
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 99, 71, 0.1)',
+                      borderColor: 'rgba(255, 99, 71, 0.5)',
+                    },
+                  },
+                }}
+              >
+                <ToggleButton value="week" aria-label="1 week">
+                  1 WEEK
+                </ToggleButton>
+                <ToggleButton value="2weeks" aria-label="2 weeks">
+                  2 WEEKS
+                </ToggleButton>
+                <ToggleButton value="3weeks" aria-label="3 weeks">
+                  3 WEEKS
+                </ToggleButton>
+                <ToggleButton value="month" aria-label="1 month">
+                  MONTH
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
             
-            <ToggleButtonGroup
-              value={chartType}
-              exclusive
-              onChange={(e, newType) => newType && setChartType(newType)}
-              size="small"
-              aria-label="chart type"
-            >
-              <ToggleButton value="line" aria-label="line chart">
-                Line
-              </ToggleButton>
-              <ToggleButton value="bar" aria-label="bar chart">
-                Bar
-              </ToggleButton>
-              <ToggleButton value="doughnut" aria-label="doughnut chart">
-                Average
-              </ToggleButton>
-            </ToggleButtonGroup>
-            
-            <Button
-              variant="outlined"
-              color="error"
-              size="small"
-              startIcon={<DeleteIcon />}
-              onClick={() => setOpenResetDialog(true)}
-            >
-              Reset All Data
-            </Button>
+            {/* Chart Type & Reset Controls */}
+            <Box sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2,
+              alignItems: { xs: 'stretch', sm: 'flex-end' },
+              justifyContent: 'space-between'
+            }}>
+              {/* Chart Type Selector */}
+              <Box sx={{ flex: { sm: 1 } }}>
+                <Typography 
+                  variant="caption" 
+                  sx={{ 
+                    display: 'block',
+                    mb: 1,
+                    color: 'text.secondary',
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    fontSize: '0.75rem'
+                  }}
+                >
+                  Chart Type
+                </Typography>
+                <ToggleButtonGroup
+                  value={chartType}
+                  exclusive
+                  onChange={(e, newType) => newType && setChartType(newType)}
+                  size="small"
+                  aria-label="chart type"
+                  sx={{
+                    display: 'flex',
+                    width: { xs: '100%', sm: 'auto' },
+                    '& .MuiToggleButton-root': {
+                      flex: { xs: 1, sm: 'none' },
+                      minHeight: { xs: 44, sm: 40 },
+                      minWidth: { sm: 80 },
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      fontWeight: 600,
+                      border: '1px solid rgba(255, 99, 71, 0.3)',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      borderRadius: '8px',
+                      mx: 0.25,
+                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:first-of-type': {
+                        ml: 0,
+                        borderTopLeftRadius: '12px',
+                        borderBottomLeftRadius: '12px',
+                      },
+                      '&:last-of-type': {
+                        mr: 0,
+                        borderTopRightRadius: '12px',
+                        borderBottomRightRadius: '12px',
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: '#ff6347',
+                        color: 'white',
+                        borderColor: '#ff6347',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
+                        '&:hover': {
+                          backgroundColor: '#ff6347',
+                        },
+                      },
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 99, 71, 0.1)',
+                        borderColor: 'rgba(255, 99, 71, 0.5)',
+                      },
+                    },
+                  }}
+                >
+                  <ToggleButton value="line" aria-label="line chart">
+                    LINE
+                  </ToggleButton>
+                  <ToggleButton value="bar" aria-label="bar chart">
+                    BAR
+                  </ToggleButton>
+                  <ToggleButton value="doughnut" aria-label="doughnut chart">
+                    AVERAGE
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Box>
+              
+              {/* Reset Button */}
+              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  startIcon={<DeleteIcon sx={{ fontSize: 18 }} />}
+                  onClick={() => setOpenResetDialog(true)}
+                  sx={{
+                    minHeight: { xs: 44, sm: 40 },
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    fontWeight: 600,
+                    borderRadius: '12px',
+                    border: '2px solid',
+                    borderColor: 'error.main',
+                    color: 'error.main',
+                    px: { xs: 2, sm: 3 },
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      backgroundColor: 'error.main',
+                      color: 'white',
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 6px 16px rgba(244, 67, 54, 0.3)',
+                    },
+                    '&:active': {
+                      transform: 'translateY(0)',
+                    },
+                  }}
+                >
+                  Reset All Data
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Box>
 

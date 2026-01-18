@@ -36,6 +36,8 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EmailIcon from '@mui/icons-material/Email';
 import SendIcon from '@mui/icons-material/Send';
 import SettingsIcon from '@mui/icons-material/Settings';
+import CloseIcon from '@mui/icons-material/Close';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { sendMemoryToEmail, getEmailSettings, updateEmailSettings } from '../utils/email';
 import { CircularProgress } from '@mui/material';
 
@@ -49,6 +51,8 @@ const MemoryLogger = ({ userName }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [selectedMemory, setSelectedMemory] = useState(null);
+  const [memoryModalOpen, setMemoryModalOpen] = useState(false);
   
   // Initialize email settings once
   const initialEmailSettings = getEmailSettings();
@@ -59,6 +63,23 @@ const MemoryLogger = ({ userName }) => {
   const [tempEnabled, setTempEnabled] = useState(initialEmailSettings.enabled);
 
   const MotionDiv = motion.div;
+
+  // Format date as "18th January 2026"
+  const formatDateWithSuffix = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const suffix = ['th', 'st', 'nd', 'rd'];
+    const v = day % 100;
+    const daySuffix = suffix[(v - 20) % 10] || suffix[v] || suffix[0];
+    const monthYear = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return `${day}${daySuffix} ${monthYear}`;
+  };
+
+  // Open memory detail modal
+  const handleViewMemory = (memory) => {
+    setSelectedMemory(memory);
+    setMemoryModalOpen(true);
+  };
 
   // Group memories by month and year
   const groupMemoriesByMonth = () => {
@@ -99,11 +120,23 @@ const MemoryLogger = ({ userName }) => {
   const handleAddMemory = async () => {
     if (newMemory.trim()) {
       const now = new Date();
+      // Get completed habits for today
+      const today = new Date().toDateString();
+      const savedHabits = localStorage.getItem(`habits_${userName}_${today}`);
+      const completedHabits = savedHabits ? JSON.parse(savedHabits).filter(h => h.completed) : [];
+      
       const memory = {
         id: Date.now(),
         text: newMemory,
         date: now.toISOString(),
-        timestamp: now.toLocaleTimeString(),
+        displayDate: formatDateWithSuffix(now.toISOString()),
+        timestamp: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+        habits: completedHabits.map(h => ({
+          id: h.id,
+          label: h.label,
+          category: h.category,
+          emoji: h.emoji || '✅',
+        })),
       };
       
       const updatedMemories = [memory, ...memories];
@@ -126,7 +159,6 @@ const MemoryLogger = ({ userName }) => {
       setShowSuccessAnimation(true);
       setTimeout(() => setShowSuccessAnimation(false), 2000);
 
-      const today = new Date().toDateString();
       localStorage.removeItem(`habits_${userName}_${today}`);
       window.dispatchEvent(new Event('habitsReset'));
     }
@@ -434,65 +466,72 @@ const MemoryLogger = ({ userName }) => {
                           >
                             <Paper
                               elevation={1}
+                              onClick={() => handleViewMemory(memory)}
                               sx={{
                                 mb: 2,
                                 p: 2,
                                 borderRadius: 2,
-                                background: '#2a2a2a',
+                                background: 'linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%)',
                                 border: '2px solid',
-                                borderColor: 'primary.light',
+                                borderColor: 'rgba(255, 99, 71, 0.3)',
                                 borderLeftWidth: 6,
+                                borderLeftColor: '#ff6347',
                                 position: 'relative',
-                                transition: 'all 0.3s ease',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                 '&:hover': {
-                                  transform: 'translateX(4px)',
-                                  boxShadow: 3,
+                                  transform: 'translateX(8px) translateY(-2px)',
+                                  boxShadow: '0 8px 24px rgba(255, 99, 71, 0.3)',
+                                  borderColor: '#ff6347',
                                 },
                               }}
                             >
                               <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                                 <Box flex={1}>
-                                  <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                  <Box display="flex" alignItems="center" gap={1} mb={1.5}>
                                     <Avatar
                                       sx={{
-                                        width: 32,
-                                        height: 32,
-                                        bgcolor: 'primary.main',
-                                        fontSize: '1rem',
+                                        width: 36,
+                                        height: 36,
+                                        bgcolor: 'linear-gradient(135deg, #ff6347, #ff8570)',
+                                        background: 'linear-gradient(135deg, #ff6347, #ff8570)',
+                                        fontSize: '1.2rem',
                                       }}
                                     >
-                                      
+                                      📝
                                     </Avatar>
                                     <Box>
-                                      <Box display="flex" gap={1} alignItems="center">
-                                        <Chip
-                                          icon={<TodayIcon />}
-                                          label={memory.date}
-                                          size="small"
-                                          color="primary"
-                                          variant="outlined"
-                                          sx={{ fontWeight: 600 }}
-                                        />
-                                        <Chip
-                                          label={memory.timestamp}
-                                          size="small"
-                                          sx={{
-                                            bgcolor: '#e3f2fd',
-                                            color: '#ff6347',
-                                            fontWeight: 600,
-                                          }}
-                                        />
-                                      </Box>
+                                      <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                          color: '#ff6347',
+                                          fontWeight: 700,
+                                          fontSize: '0.95rem',
+                                        }}
+                                      >
+                                        {memory.displayDate || formatDateWithSuffix(memory.date)}
+                                      </Typography>
+                                      <Typography
+                                        variant="caption"
+                                        sx={{
+                                          color: 'rgba(255, 255, 255, 0.6)',
+                                          fontSize: '0.75rem',
+                                        }}
+                                      >
+                                        {memory.timestamp}
+                                      </Typography>
                                     </Box>
                                   </Box>
-                                  <Divider sx={{ my: 1 }} />
                                   <Typography
-                                    variant="body1"
+                                    variant="body2"
                                     sx={{
-                                      color: '#333',
+                                      color: 'rgba(255, 255, 255, 0.85)',
                                       lineHeight: 1.6,
-                                      whiteSpace: 'pre-wrap',
-                                      wordBreak: 'break-word',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical',
                                     }}
                                   >
                                     {memory.text}
@@ -500,7 +539,10 @@ const MemoryLogger = ({ userName }) => {
                                 </Box>
                                 <IconButton
                                   aria-label="delete memory"
-                                  onClick={() => handleDeleteMemory(memory.id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteMemory(memory.id);
+                                  }}
                                   sx={{
                                     color: 'error.main',
                                     '&:hover': {
@@ -603,6 +645,325 @@ const MemoryLogger = ({ userName }) => {
             Save
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Memory Detail Popup Modal */}
+      <Dialog
+        open={memoryModalOpen}
+        onClose={() => setMemoryModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          component: motion.div,
+          initial: { scale: 0.8, opacity: 0 },
+          animate: { scale: 1, opacity: 1 },
+          exit: { scale: 0.8, opacity: 0 },
+          transition: { duration: 0.3, type: 'spring', damping: 20, stiffness: 300 },
+          sx: {
+            borderRadius: 4,
+            background: 'linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%)',
+            border: '2px solid #ff6347',
+            boxShadow: '0 20px 60px rgba(255, 99, 71, 0.4)',
+            overflow: 'hidden',
+          },
+        }}
+      >
+        {selectedMemory && (
+          <>
+            {/* Header with gradient */}
+            <Box
+              sx={{
+                background: 'linear-gradient(135deg, #ff6347 0%, #ff8570 100%)',
+                p: 3,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Decorative circles */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: -50,
+                  right: -50,
+                  width: 150,
+                  height: 150,
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                }}
+              />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: -30,
+                  left: -30,
+                  width: 100,
+                  height: 100,
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                }}
+              />
+
+              <Box sx={{ position: 'relative', zIndex: 1 }}>
+                <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Avatar
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        bgcolor: 'white',
+                        color: '#ff6347',
+                        fontSize: '2rem',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                      }}
+                    >
+                      📝
+                    </Avatar>
+                    <Box>
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          color: 'white',
+                          fontWeight: 800,
+                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                        }}
+                      >
+                        Memory Details
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          fontSize: '0.9rem',
+                        }}
+                      >
+                        {selectedMemory.displayDate || formatDateWithSuffix(selectedMemory.date)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <IconButton
+                    onClick={() => setMemoryModalOpen(false)}
+                    sx={{
+                      color: 'white',
+                      bgcolor: 'rgba(255, 255, 255, 0.2)',
+                      '&:hover': {
+                        bgcolor: 'rgba(255, 255, 255, 0.3)',
+                        transform: 'rotate(90deg)',
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Content */}
+            <DialogContent sx={{ p: 3, bgcolor: '#2a2a2a' }}>
+              {/* Time Badge */}
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  bgcolor: 'rgba(255, 99, 71, 0.15)',
+                  px: 2,
+                  py: 1,
+                  borderRadius: 3,
+                  mb: 3,
+                  border: '1px solid rgba(255, 99, 71, 0.3)',
+                }}
+              >
+                <AccessTimeIcon sx={{ color: '#ff6347', fontSize: 20 }} />
+                <Typography sx={{ color: '#ff6347', fontWeight: 600, fontSize: '0.9rem' }}>
+                  {selectedMemory.timestamp}
+                </Typography>
+              </Box>
+
+              {/* Memory Content */}
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  borderRadius: 3,
+                  background: 'linear-gradient(135deg, #1a1a1a 0%, #252525 100%)',
+                  border: '1px solid rgba(255, 99, 71, 0.2)',
+                  mb: 3,
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.95)',
+                    lineHeight: 1.8,
+                    fontSize: '1.05rem',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {selectedMemory.text}
+                </Typography>
+              </Paper>
+
+              {/* Completed Habits Section */}
+              {selectedMemory.habits && selectedMemory.habits.length > 0 && (
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #2a1a1a 0%, #1a2525 100%)',
+                    border: '1px solid rgba(255, 99, 71, 0.3)',
+                  }}
+                >
+                  <Box display="flex" alignItems="center" gap={1} mb={2}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: '#ff6347',
+                        fontWeight: 700,
+                        fontSize: '1.1rem',
+                      }}
+                    >
+                      ✅ Completed Habits
+                    </Typography>
+                    <Chip
+                      label={selectedMemory.habits.length}
+                      size="small"
+                      sx={{
+                        bgcolor: '#ff6347',
+                        color: 'white',
+                        fontWeight: 700,
+                        minWidth: 32,
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                      gap: 1.5,
+                    }}
+                  >
+                    {selectedMemory.habits.map((habit, index) => (
+                      <Box
+                        key={habit.id}
+                        component={motion.div}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1.5,
+                          p: 1.5,
+                          borderRadius: 2,
+                          background: 'rgba(255, 99, 71, 0.1)',
+                          border: '1px solid rgba(255, 99, 71, 0.2)',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            background: 'rgba(255, 99, 71, 0.15)',
+                            transform: 'translateX(4px)',
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            fontSize: '1.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            minWidth: 36,
+                            height: 36,
+                            borderRadius: '50%',
+                            background: 'rgba(255, 99, 71, 0.2)',
+                          }}
+                        >
+                          {habit.emoji}
+                        </Box>
+                        <Box flex={1}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: 'rgba(255, 255, 255, 0.95)',
+                              fontWeight: 600,
+                              fontSize: '0.9rem',
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {habit.label}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: 'rgba(255, 255, 255, 0.5)',
+                              fontSize: '0.75rem',
+                            }}
+                          >
+                            {habit.category}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Paper>
+              )}
+
+              {/* Memory ID Badge */}
+              <Box
+                sx={{
+                  mt: 3,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Chip
+                  label={`ID: ${selectedMemory.id}`}
+                  size="small"
+                  sx={{
+                    bgcolor: 'rgba(255, 255, 255, 0.05)',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                  }}
+                />
+              </Box>
+            </DialogContent>
+
+            {/* Footer Actions */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: '#1e1e1e',
+                borderTop: '1px solid rgba(255, 99, 71, 0.2)',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+              }}
+            >
+              <Button
+                onClick={() => setMemoryModalOpen(false)}
+                variant="contained"
+                sx={{
+                  bgcolor: '#ff6347',
+                  minHeight: { xs: 44, sm: 36 },
+                  borderRadius: 2,
+                  px: 4,
+                  fontWeight: 600,
+                  boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
+                  '&:hover': {
+                    bgcolor: '#ff4500',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 16px rgba(255, 99, 71, 0.4)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Close
+              </Button>
+            </Box>
+          </>
+        )}
       </Dialog>
     </MotionDiv>
   );

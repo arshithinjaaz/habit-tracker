@@ -12,7 +12,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #0f0f0f;
-  background-attachment: fixed;
+  /* Disable background-attachment: fixed on mobile for better performance */
+  background-attachment: scroll;
+  /* Prevent text selection on mobile */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Improve touch scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Remove tap highlight */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection for inputs and text areas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
 }
 
 #root {
@@ -32,17 +50,73 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ff6347;
+  background: linear-gradient(45deg, #ff6347, #ff8570);
   border-radius: 10px;
+  border: 2px solid #1e1e1e;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff8570;
+  background: linear-gradient(45deg, #ff8570, #ffa07a);
 }
 
-/* Smooth animations */
+/* Enhanced animations */
 * {
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced button styles */
+button, .MuiButton-root {
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+button:hover, .MuiButton-root:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* Enhanced Paper component styling */
+.MuiPaper-root {
+  backdrop-filter: blur(20px) !important;
+  background: linear-gradient(145deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.85) 100%) !important;
+  border: 1px solid rgba(255, 99, 71, 0.1) !important;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Typography enhancements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+p, span, div {
+  letter-spacing: 0.01em;
 }
 
 /* Selection styling */
@@ -54,5 +128,63 @@ body {
 ::-moz-selection {
   background-color: #ff6347;
   color: white;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  /* Larger tap targets for mobile */
+  button, .MuiButton-root, .MuiIconButton-root {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Better input field sizing */
+  .MuiTextField-root {
+    margin-bottom: 16px !important;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Optimize container padding for mobile */
+  .MuiContainer-root {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  
+  /* Make papers more mobile-friendly */
+  .MuiPaper-root {
+    margin: 8px 0 !important;
+  }
+  
+  /* Optimize typography for mobile reading */
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.3 !important;
+  }
+}
+
+/* Touch-friendly scrollbars on mobile */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #ff6347;
+    border-radius: 2px;
+  }
+}
+
+/* Prevent horizontal scroll */
+body, html {
+  overflow-x: hidden;
+  width: 100%;
 }
 

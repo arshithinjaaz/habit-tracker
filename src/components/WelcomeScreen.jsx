@@ -8,19 +8,31 @@ import {
   IconButton,
   Checkbox,
   FormControlLabel,
-  InputAdornment
+  InputAdornment,
+  Paper,
+  Fade,
+  Slide,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmailIcon from '@mui/icons-material/Email';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import LockIcon from '@mui/icons-material/Lock';
+import PersonIcon from '@mui/icons-material/Person';
 import HollaCharacter from './HollaCharacter';
 import { hashPin, verifyPin, migratePlainTextPin } from '../utils/crypto';
 import { sanitizeUserName } from '../utils/sanitize';
 import { validateUserPin, validateUserName } from '../schemas/user.schema';
 
 const WelcomeScreen = ({ onLoginSuccess }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
   const [name, setName] = useState('');
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
@@ -29,14 +41,33 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
   const [isReturningUser, setIsReturningUser] = useState(null);
   const [emailAddress, setEmailAddress] = useState('');
   const [enableEmail, setEnableEmail] = useState(false);
+  const [showPin, setShowPin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Generate random positions once for background elements
+  // Harvey Specter inspired quotes for motivation
+  const motivationalQuotes = useMemo(() => [
+    "Success isn't about luck. It's about preparation meeting opportunity.",
+    "I don't have dreams. I have goals.",
+    "Excellence isn't a skill, it's an attitude.",
+    "The only time success comes before work is in the dictionary.",
+    "I refuse to answer that on the grounds that I don't want to.",
+    "Life isn't about the amount of breaths you take. It's about the moments that take your breath away."
+  ], []);
+  
+  const currentQuote = useMemo(() => 
+    motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
+    [motivationalQuotes]
+  );
+
+  // Modern animated background elements
   const backgroundElements = useMemo(() => 
-    [...Array(6)].map((_, i) => ({
-      size: 100 + i * 50,
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-      duration: 5 + i,
+    [...Array(12)].map((_, i) => ({
+      id: i,
+      size: Math.random() * 200 + 50,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 10 + Math.random() * 20,
     })),
     []
   );
@@ -176,492 +207,667 @@ const WelcomeScreen = ({ onLoginSuccess }) => {
     <Box
       sx={{
         minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#0f0f0f',
+        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
         position: 'relative',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      {/* Animated Background Elements */}
+      {/* Modern Animated Background */}
+      {backgroundElements.map((element) => (
+        <motion.div
+          key={element.id}
+          style={{
+            position: 'absolute',
+            width: element.size,
+            height: element.size,
+            borderRadius: '50%',
+            background: `radial-gradient(circle, rgba(255,99,71,0.${Math.floor(Math.random() * 3) + 1}) 0%, transparent 70%)`,
+            filter: 'blur(1px)',
+          }}
+          animate={{
+            x: [`${element.x}%`, `${(element.x + 20) % 100}%`, `${element.x}%`],
+            y: [`${element.y}%`, `${(element.y + 15) % 100}%`, `${element.y}%`],
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{
+            duration: element.duration,
+            repeat: Infinity,
+            delay: element.delay,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
 
-      {/* Main Content */}
-      <Box
-        sx={{
-          position: 'relative',
-          zIndex: 1,
-          animation: 'fadeIn 0.5s ease-in-out',
-          '@keyframes fadeIn': {
-            '0%': { transform: 'scale(0.9)', opacity: 0 },
-            '100%': { transform: 'scale(1)', opacity: 1 },
-          },
-        }}
-      >
-        <Box
-          sx={{
-            background: '#1e1e1e',
-            backdropFilter: 'blur(20px)',
-            borderRadius: 4,
-            p: { xs: 2, sm: 3, md: 5 },
-            width: { xs: '90%', sm: 400 },
-            maxWidth: { xs: '100%', sm: 450 },
-            mx: { xs: 2, sm: 0 },
-            boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
-            position: 'relative',
+      {/* Navigation Back Button */}
+      {currentStep !== 'choice' && (
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          style={{
+            position: 'absolute',
+            top: isMobile ? '2rem' : '3rem',
+            left: isMobile ? '1rem' : '2rem',
+            zIndex: 10,
           }}
         >
-          {/* Holla Character - Clash of Clans Style */}
-          <Box
+          <IconButton
+            onClick={handleBack}
             sx={{
-              position: 'absolute',
-              top: -80,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 10,
-              animation: 'slideDown 0.5s ease-out 0.2s both',
-              '@keyframes slideDown': {
-                '0%': { transform: 'translateX(-50%) translateY(-100px)', opacity: 0 },
-                '100%': { transform: 'translateX(-50%) translateY(0)', opacity: 1 },
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              color: '#ff6347',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 99, 71, 0.2)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 99, 71, 0.1)',
+                transform: 'scale(1.05)',
               },
+              transition: 'all 0.3s ease',
             }}
           >
-            <Box sx={{ 
-              transform: 'scale(1.2)',
-              filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))',
-            }}>
-              <HollaCharacter 
-                mood={getHollaMood()}
-              />
-            </Box>
-          </Box>
+            <ArrowBackIcon />
+          </IconButton>
+        </motion.div>
+      )}
 
-          {/* Back Button */}
-          {currentStep !== 'choice' && (
-            <IconButton
-              onClick={handleBack}
-              sx={{
-                position: 'absolute',
-                top: 16,
-                left: 16,
-                color: '#ff6347',
-                '&:hover': {
-                  background: 'rgba(255, 99, 71, 0.1)',
-                },
-              }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          )}
-
+      {/* Main Content Container */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        style={{ width: '100%', maxWidth: '500px', padding: isMobile ? '1rem' : '2rem' }}
+      >
+        <Paper
+          elevation={20}
+          sx={{
+            background: 'rgba(30, 30, 30, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 99, 71, 0.1)',
+            borderRadius: 4,
+            p: { xs: 3, md: 5 },
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '2px',
+              background: 'linear-gradient(90deg, transparent 0%, #ff6347 50%, transparent 100%)',
+            }
+          }}
+        >
           <AnimatePresence mode="wait">
-            {/* Choice Screen */}
+            {/* Initial Choice Screen */}
             {currentStep === 'choice' && (
-              <Box key="choice">
-                <Box sx={{ mt: 6 }}>
+              <motion.div
+                key="choice"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Box sx={{ textAlign: 'center', mb: 5 }}>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  >
+                    <Box
+                      sx={{
+                        width: { xs: 80, md: 100 },
+                        height: { xs: 80, md: 100 },
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #ff6347 0%, #ff8570 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 2rem',
+                        boxShadow: '0 20px 40px rgba(255, 99, 71, 0.3)',
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '2.5rem', md: '3.5rem' },
+                          filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
+                        }}
+                      >
+                        🎯
+                      </Typography>
+                    </Box>
+                  </motion.div>
+
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: 700,
+                      background: 'linear-gradient(135deg, #ffffff 0%, #ff6347 100%)',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      mb: 2,
+                      fontSize: { xs: '2rem', md: '3rem' },
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    Habit Tracker
+                  </Typography>
+
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: '#a0a0a0',
+                      fontStyle: 'italic',
+                      mb: 1,
+                      fontSize: { xs: '0.9rem', md: '1.1rem' },
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    "{currentQuote}"
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: '#ff6347',
+                      fontWeight: 600,
+                      mb: 4,
+                      fontSize: { xs: '0.8rem', md: '0.9rem' },
+                    }}
+                  >
+                    — Inspired by Excellence
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        startIcon={<PersonAddIcon />}
+                        onClick={() => handleUserTypeSelection(false)}
+                        sx={{
+                          py: { xs: 2, md: 2.5 },
+                          fontSize: { xs: '1rem', md: '1.1rem' },
+                          fontWeight: 600,
+                          background: 'linear-gradient(135deg, #ff6347 0%, #ff8570 100%)',
+                          boxShadow: '0 8px 32px rgba(255, 99, 71, 0.4)',
+                          border: 'none',
+                          borderRadius: 3,
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #ff8570 0%, #ff6347 100%)',
+                            boxShadow: '0 12px 40px rgba(255, 99, 71, 0.6)',
+                            transform: 'translateY(-2px)',
+                          },
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        Create New Journey
+                      </Button>
+                    </motion.div>
+
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        fullWidth
+                        startIcon={<LoginIcon />}
+                        onClick={() => handleUserTypeSelection(true)}
+                        sx={{
+                          py: { xs: 2, md: 2.5 },
+                          fontSize: { xs: '1rem', md: '1.1rem' },
+                          fontWeight: 600,
+                          borderColor: '#ff6347',
+                          color: '#ff6347',
+                          borderWidth: 2,
+                          borderRadius: 3,
+                          background: 'rgba(255, 99, 71, 0.05)',
+                          '&:hover': {
+                            borderWidth: 2,
+                            borderColor: '#ff6347',
+                            background: 'rgba(255, 99, 71, 0.15)',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 8px 24px rgba(255, 99, 71, 0.2)',
+                          },
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        Continue Journey
+                      </Button>
+                    </motion.div>
+                  </Box>
+                </Box>
+              </motion.div>
+            )}
+
+            {/* Name Input Screen */}
+            {currentStep === 'name' && (
+              <motion.div
+                key="name"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
                   <Typography
                     variant="h4"
                     sx={{
-                      mb: 1,
                       fontWeight: 700,
-                      fontSize: { xs: '1.75rem', sm: '2.125rem' },
-                      color: '#ff6347',
-                      textAlign: 'center',
+                      color: '#ffffff',
+                      mb: 1,
+                      fontSize: { xs: '1.8rem', md: '2.5rem' },
                     }}
                   >
-                    Holla!
+                    {isReturningUser ? 'Welcome Back!' : "Let's Begin"}
                   </Typography>
                   <Typography
                     sx={{
                       mb: 4,
                       color: '#a0a0a0',
-                      textAlign: 'center',
-                      fontSize: '0.95rem',
+                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      lineHeight: 1.6,
                     }}
                   >
-                    Your friendly habit tracker
+                    {isReturningUser ? 'Enter your username to continue your journey' : 'Choose your unique username to start building habits'}
                   </Typography>
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    startIcon={<PersonAddIcon />}
-                    onClick={() => handleUserTypeSelection(false)}
-                    sx={{
-                      py: { xs: 1.5, sm: 2 },
-                      minHeight: { xs: 48, sm: 44 },
-                      fontSize: { xs: '16px', sm: '1rem' },
-                      fontWeight: 600,
-                      background: '#ff6347',
-                      boxShadow: '0 4px 15px rgba(255,99,71,0.4)',
-                      '&:hover': {
-                        background: '#ff8570',
-                        boxShadow: '0 6px 20px rgba(255,99,71,0.6)',
-                        transform: 'translateY(-2px)',
-                      },
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    Create Account
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    startIcon={<LoginIcon />}
-                    onClick={() => handleUserTypeSelection(true)}
-                    sx={{
-                      py: { xs: 1.5, sm: 2 },
-                      minHeight: { xs: 48, sm: 44 },
-                      fontSize: { xs: '16px', sm: '1rem' },
-                      fontWeight: 600,
-                      borderColor: '#ff6347',
-                      color: '#ff6347',
-                      borderWidth: 2,
-                      '&:hover': {
-                        borderWidth: 2,
-                        borderColor: '#ff8570',
-                        background: 'rgba(255,99,71,0.05)',
-                        transform: 'translateY(-2px)',
-                      },
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    Login
-                  </Button>
-                </Box>
-                </Box>
-              </Box>
-            )}
-
-            {/* Name Input Screen */}
-            {currentStep === 'name' && (
-              <Box key="name">
-                <Box sx={{ mt: 6 }}>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      mb: 1,
-                      fontWeight: 600,
-                      color: '#ffffff',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {isReturningUser ? 'Welcome back!' : "What's your name?"}
-                  </Typography>
-                <Typography
-                  sx={{
-                    mb: 3,
-                    color: '#a0a0a0',
-                    textAlign: 'center',
-                    fontSize: '0.9rem',
-                  }}
-                >
-                  {isReturningUser ? 'Enter your username to continue' : 'Choose a username for your account'}
-                </Typography>
-
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
-                    {error}
-                  </Alert>
-                )}
-
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleNameSubmit()}
-                  placeholder="Enter your name"
-                  autoFocus
-                  sx={{
-                    mb: 3,
-                    '& input': {
-                      fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
-                    },
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                      '&:hover fieldset': {
-                        borderColor: '#ff6347',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#ff6347',
-                        borderWidth: 2,
-                      },
-                    },
-                  }}
-                />
-
-                {!isReturningUser && (
-                  <>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      label="Email Address (Optional)"
-                      type="email"
-                      placeholder="your@example.com"
-                      value={emailAddress}
-                      onChange={(e) => setEmailAddress(e.target.value)}
-                      helperText="Receive automatic memory backups via email"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <EmailIcon sx={{ color: '#ff6347' }} />
-                          </InputAdornment>
-                        )
-                      }}
-                      sx={{
-                        mb: 2,
-                        '& input': {
-                          fontSize: { xs: '16px', sm: '14px' }, // Prevents iOS zoom
-                        },
-                        '& .MuiOutlinedInput-root': {
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    >
+                      <Alert 
+                        severity="error" 
+                        sx={{ 
+                          mb: 3,
                           borderRadius: 2,
-                          '&:hover fieldset': {
-                            borderColor: '#ff6347',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: '#ff6347',
-                            borderWidth: 2,
-                          },
+                          background: 'rgba(244, 67, 54, 0.1)',
+                          border: '1px solid rgba(244, 67, 54, 0.3)',
+                          color: '#ff6b6b',
+                        }}
+                      >
+                        {error}
+                      </Alert>
+                    </motion.div>
+                  )}
+
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleNameSubmit()}
+                    placeholder="Enter your username"
+                    autoFocus={!isMobile}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon sx={{ color: '#ff6347' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      mb: 4,
+                      '& input': {
+                        fontSize: { xs: '16px', sm: '1.1rem' },
+                        color: '#ffffff',
+                        padding: '18px 14px',
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: 3,
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        backdropFilter: 'blur(10px)',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 99, 71, 0.3)',
+                          borderWidth: 1,
                         },
-                      }}
-                    />
+                        '&:hover fieldset': {
+                          borderColor: '#ff6347',
+                          borderWidth: 2,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#ff6347',
+                          borderWidth: 2,
+                          boxShadow: '0 0 0 3px rgba(255, 99, 71, 0.1)',
+                        },
+                      },
+                    }}
+                  />
 
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={enableEmail}
-                          onChange={(e) => setEnableEmail(e.target.checked)}
-                          sx={{
-                            color: '#ff6347',
-                            '&.Mui-checked': {
-                              color: '#ff6347',
-                            },
-                          }}
-                        />
-                      }
-                      label="Enable email memory backup"
-                      sx={{ 
-                        mb: 2,
-                        '& .MuiTypography-root': {
-                          fontSize: { xs: '14px', sm: '16px' }
-                        }
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      onClick={handleNameSubmit}
+                      disabled={!name.trim() || loading}
+                      sx={{
+                        py: { xs: 2, md: 2.5 },
+                        fontSize: { xs: '1rem', md: '1.1rem' },
+                        fontWeight: 600,
+                        background: name.trim() ? 'linear-gradient(135deg, #ff6347 0%, #ff8570 100%)' : 'rgba(255, 255, 255, 0.1)',
+                        boxShadow: name.trim() ? '0 8px 32px rgba(255, 99, 71, 0.4)' : 'none',
+                        borderRadius: 3,
+                        '&:hover': {
+                          background: name.trim() ? 'linear-gradient(135deg, #ff8570 0%, #ff6347 100%)' : 'rgba(255, 255, 255, 0.15)',
+                          boxShadow: name.trim() ? '0 12px 40px rgba(255, 99, 71, 0.6)' : 'none',
+                        },
+                        '&:disabled': {
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          color: 'rgba(255, 255, 255, 0.3)',
+                        },
+                        transition: 'all 0.3s ease',
                       }}
-                    />
-                  </>
-                )}
-
-                <Button
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  onClick={handleNameSubmit}
-                  disabled={!name.trim()}
-                  sx={{
-                    py: { xs: 1.5, sm: 1.5 },
-                    minHeight: { xs: 48, sm: 44 },
-                    fontSize: { xs: '16px', sm: '1rem' },
-                    fontWeight: 600,
-                    background: '#ff6347',
-                    '&:hover': {
-                      boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
-                    },
-                    '&:disabled': {
-                      background: '#e0e0e0',
-                    },
-                  }}
-                >
-                  Continue
-                </Button>
+                    >
+                      {loading ? 'Processing...' : 'Continue'}
+                    </Button>
+                  </motion.div>
                 </Box>
-              </Box>
+              </motion.div>
             )}
 
             {/* PIN Input Screen */}
             {currentStep === 'pin' && (
-              <Box key="pin">
-                <Box sx={{ mt: 6 }}>
+              <motion.div
+                key="pin"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
                   <Typography
-                    variant="h5"
+                    variant="h4"
                     sx={{
-                      mb: 1,
-                      fontWeight: 600,
+                      fontWeight: 700,
                       color: '#ffffff',
-                      textAlign: 'center',
+                      mb: 1,
+                      fontSize: { xs: '1.8rem', md: '2.5rem' },
                     }}
                   >
-                    {isReturningUser ? `Hi ${name}!` : 'Create your PIN'}
+                    {isReturningUser ? 'Enter PIN' : 'Create PIN'}
                   </Typography>
-                <Typography
-                  sx={{
-                    mb: 3,
-                    color: '#a0a0a0',
-                    textAlign: 'center',
-                    fontSize: '0.9rem',
-                  }}
-                >
-                  {isReturningUser ? 'Enter your 4-digit PIN' : 'Choose a 4-digit PIN to secure your account'}
-                </Typography>
+                  <Typography
+                    sx={{
+                      mb: 4,
+                      color: '#a0a0a0',
+                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {isReturningUser ? 'Enter your 4-digit PIN to unlock' : 'Create a secure 4-digit PIN'}
+                  </Typography>
 
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
-                    {error}
-                  </Alert>
-                )}
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    >
+                      <Alert 
+                        severity="error" 
+                        sx={{ 
+                          mb: 3,
+                          borderRadius: 2,
+                          background: 'rgba(244, 67, 54, 0.1)',
+                          border: '1px solid rgba(244, 67, 54, 0.3)',
+                          color: '#ff6b6b',
+                        }}
+                      >
+                        {error}
+                      </Alert>
+                    </motion.div>
+                  )}
 
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  type="password"
-                  value={pin}
-                  onChange={(e) => {
-                    if (/^\d{0,4}$/.test(e.target.value)) {
-                      setPin(e.target.value);
-                    }
-                  }}
-                  onKeyPress={(e) => e.key === 'Enter' && pin.length === 4 && handlePinSubmit()}
-                  placeholder="••••"
-                  autoFocus
-                  inputProps={{
-                    maxLength: 4,
-                    inputMode: 'numeric',
-                    style: { textAlign: 'center', fontSize: '2rem', letterSpacing: '1rem' },
-                  }}
-                  sx={{
-                    mb: 3,
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                      '&:hover fieldset': {
-                        borderColor: '#ff6347',
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type={showPin ? 'text' : 'password'}
+                    value={pin}
+                    onChange={(e) => {
+                      if (/^\d{0,4}$/.test(e.target.value)) {
+                        setPin(e.target.value);
+                      }
+                    }}
+                    onKeyPress={(e) => e.key === 'Enter' && pin.length === 4 && handlePinSubmit()}
+                    placeholder="••••"
+                    autoFocus={!isMobile}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon sx={{ color: '#ff6347' }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPin(!showPin)}
+                            edge="end"
+                            sx={{ color: '#ff6347' }}
+                          >
+                            {showPin ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    inputProps={{
+                      maxLength: 4,
+                      inputMode: 'numeric',
+                      style: { 
+                        textAlign: 'center', 
+                        fontSize: isMobile ? '1.5rem' : '2rem', 
+                        letterSpacing: '0.5rem',
+                        color: '#ffffff'
                       },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#ff6347',
-                        borderWidth: 2,
+                    }}
+                    sx={{
+                      mb: 4,
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: 3,
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        backdropFilter: 'blur(10px)',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 99, 71, 0.3)',
+                          borderWidth: 1,
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ff6347',
+                          borderWidth: 2,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#ff6347',
+                          borderWidth: 2,
+                          boxShadow: '0 0 0 3px rgba(255, 99, 71, 0.1)',
+                        },
                       },
-                    },
-                  }}
-                />
+                    }}
+                  />
 
-                <Button
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  onClick={handlePinSubmit}
-                  disabled={pin.length !== 4}
-                  sx={{
-                    py: { xs: 1.5, sm: 1.5 },
-                    minHeight: { xs: 48, sm: 44 },
-                    fontSize: { xs: '16px', sm: '1rem' },
-                    fontWeight: 600,
-                    background: '#ff6347',
-                    '&:hover': {
-                      boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
-                    },
-                    '&:disabled': {
-                      background: '#e0e0e0',
-                    },
-                  }}
-                >
-                  {isReturningUser ? 'Unlock' : 'Continue'}
-                </Button>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      onClick={handlePinSubmit}
+                      disabled={pin.length !== 4 || loading}
+                      sx={{
+                        py: { xs: 2, md: 2.5 },
+                        fontSize: { xs: '1rem', md: '1.1rem' },
+                        fontWeight: 600,
+                        background: pin.length === 4 ? 'linear-gradient(135deg, #ff6347 0%, #ff8570 100%)' : 'rgba(255, 255, 255, 0.1)',
+                        boxShadow: pin.length === 4 ? '0 8px 32px rgba(255, 99, 71, 0.4)' : 'none',
+                        borderRadius: 3,
+                        '&:hover': {
+                          background: pin.length === 4 ? 'linear-gradient(135deg, #ff8570 0%, #ff6347 100%)' : 'rgba(255, 255, 255, 0.15)',
+                          boxShadow: pin.length === 4 ? '0 12px 40px rgba(255, 99, 71, 0.6)' : 'none',
+                        },
+                        '&:disabled': {
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          color: 'rgba(255, 255, 255, 0.3)',
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      {loading ? 'Processing...' : (isReturningUser ? 'Unlock' : 'Continue')}
+                    </Button>
+                  </motion.div>
                 </Box>
-              </Box>
+              </motion.div>
             )}
 
             {/* Confirm PIN Screen */}
             {currentStep === 'confirm' && (
-              <Box key="confirm">
-                <Box sx={{ mt: 6 }}>
+              <motion.div
+                key="confirm"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
                   <Typography
-                    variant="h5"
+                    variant="h4"
                     sx={{
-                      mb: 1,
-                      fontWeight: 600,
+                      fontWeight: 700,
                       color: '#ffffff',
-                      textAlign: 'center',
+                      mb: 1,
+                      fontSize: { xs: '1.8rem', md: '2.5rem' },
                     }}
                   >
-                    Confirm your PIN
+                    Confirm PIN
                   </Typography>
-                <Typography
-                  sx={{
-                    mb: 3,
-                    color: '#a0a0a0',
-                    textAlign: 'center',
-                    fontSize: '0.9rem',
-                  }}
-                >
-                  Enter your PIN again to confirm
-                </Typography>
+                  <Typography
+                    sx={{
+                      mb: 4,
+                      color: '#a0a0a0',
+                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Enter your PIN again to confirm
+                  </Typography>
 
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
-                    {error}
-                  </Alert>
-                )}
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    >
+                      <Alert 
+                        severity="error" 
+                        sx={{ 
+                          mb: 3,
+                          borderRadius: 2,
+                          background: 'rgba(244, 67, 54, 0.1)',
+                          border: '1px solid rgba(244, 67, 54, 0.3)',
+                          color: '#ff6b6b',
+                        }}
+                      >
+                        {error}
+                      </Alert>
+                    </motion.div>
+                  )}
 
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  type="password"
-                  value={confirmPin}
-                  onChange={(e) => {
-                    if (/^\d{0,4}$/.test(e.target.value)) {
-                      setConfirmPin(e.target.value);
-                    }
-                  }}
-                  onKeyPress={(e) => e.key === 'Enter' && confirmPin.length === 4 && handleConfirmPinSubmit()}
-                  placeholder="••••"
-                  autoFocus
-                  inputProps={{
-                    maxLength: 4,
-                    inputMode: 'numeric',
-                    style: { textAlign: 'center', fontSize: '2rem', letterSpacing: '1rem' },
-                  }}
-                  sx={{
-                    mb: 3,
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                      '&:hover fieldset': {
-                        borderColor: '#ff6347',
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type={showPin ? 'text' : 'password'}
+                    value={confirmPin}
+                    onChange={(e) => {
+                      if (/^\d{0,4}$/.test(e.target.value)) {
+                        setConfirmPin(e.target.value);
+                      }
+                    }}
+                    onKeyPress={(e) => e.key === 'Enter' && confirmPin.length === 4 && handleConfirmPinSubmit()}
+                    placeholder="••••"
+                    autoFocus={!isMobile}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon sx={{ color: '#ff6347' }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPin(!showPin)}
+                            edge="end"
+                            sx={{ color: '#ff6347' }}
+                          >
+                            {showPin ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    inputProps={{
+                      maxLength: 4,
+                      inputMode: 'numeric',
+                      style: { 
+                        textAlign: 'center', 
+                        fontSize: isMobile ? '1.5rem' : '2rem', 
+                        letterSpacing: '0.5rem',
+                        color: '#ffffff'
                       },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#ff6347',
-                        borderWidth: 2,
+                    }}
+                    sx={{
+                      mb: 4,
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: 3,
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        backdropFilter: 'blur(10px)',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 99, 71, 0.3)',
+                          borderWidth: 1,
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ff6347',
+                          borderWidth: 2,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#ff6347',
+                          borderWidth: 2,
+                          boxShadow: '0 0 0 3px rgba(255, 99, 71, 0.1)',
+                        },
                       },
-                    },
-                  }}
-                />
+                    }}
+                  />
 
-                <Button
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  onClick={handleConfirmPinSubmit}
-                  disabled={confirmPin.length !== 4}
-                  sx={{
-                    py: { xs: 1.5, sm: 1.5 },
-                    minHeight: { xs: 48, sm: 44 },
-                    fontSize: { xs: '16px', sm: '1rem' },
-                    fontWeight: 600,
-                    background: '#ff6347',
-                    '&:hover': {
-                      boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
-                    },
-                    '&:disabled': {
-                      background: '#e0e0e0',
-                    },
-                  }}
-                >
-                  Get Started
-                </Button>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      onClick={handleConfirmPinSubmit}
+                      disabled={confirmPin.length !== 4 || loading}
+                      sx={{
+                        py: { xs: 2, md: 2.5 },
+                        fontSize: { xs: '1rem', md: '1.1rem' },
+                        fontWeight: 600,
+                        background: confirmPin.length === 4 ? 'linear-gradient(135deg, #ff6347 0%, #ff8570 100%)' : 'rgba(255, 255, 255, 0.1)',
+                        boxShadow: confirmPin.length === 4 ? '0 8px 32px rgba(255, 99, 71, 0.4)' : 'none',
+                        borderRadius: 3,
+                        '&:hover': {
+                          background: confirmPin.length === 4 ? 'linear-gradient(135deg, #ff8570 0%, #ff6347 100%)' : 'rgba(255, 255, 255, 0.15)',
+                          boxShadow: confirmPin.length === 4 ? '0 12px 40px rgba(255, 99, 71, 0.6)' : 'none',
+                        },
+                        '&:disabled': {
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          color: 'rgba(255, 255, 255, 0.3)',
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      {loading ? 'Creating Account...' : 'Start Journey'}
+                    </Button>
+                  </motion.div>
                 </Box>
-              </Box>
+              </motion.div>
             )}
           </AnimatePresence>
-        </Box>
-      </Box>
+        </Paper>
+      </motion.div>
     </Box>
   );
 };

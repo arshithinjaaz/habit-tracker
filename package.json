@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "start": "node server.js",
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "generate-logos": "node scripts/generate-logo.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.3.3",
