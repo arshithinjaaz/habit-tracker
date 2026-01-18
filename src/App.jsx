@@ -85,8 +85,8 @@ const getTheme = (mode) => createTheme({
     MuiContainer: {
       styleOverrides: {
         root: {
-          paddingLeft: 8,
-          paddingRight: 8,
+          paddingLeft: 12,
+          paddingRight: 12,
           '@media (min-width: 600px)': {
             paddingLeft: 24,
             paddingRight: 24,
@@ -100,6 +100,8 @@ const getTheme = (mode) => createTheme({
           backgroundImage: 'none',
           borderRadius: 12,
           backgroundColor: '#1e1e1e',
+          marginTop: 8,
+          marginBottom: 8,
         },
       },
     },
@@ -109,6 +111,69 @@ const getTheme = (mode) => createTheme({
           borderRadius: 8,
           textTransform: 'none',
           fontWeight: 600,
+          minHeight: 44,
+          padding: '10px 16px',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          width: 40,
+          height: 40,
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          minHeight: 36,
+          borderRadius: 12,
+          margin: 4,
+          paddingLeft: 8,
+          paddingRight: 8,
+        },
+        label: {
+          fontWeight: 600,
+          letterSpacing: 0.2,
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#1e1e1e',
+          padding: '0 4px',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 10,
+        },
+        input: {
+          fontSize: '1rem',
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        margin: 'dense',
+        fullWidth: true,
+      },
+      styleOverrides: {
+        root: {
+          marginTop: 8,
+          marginBottom: 8,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          margin: 12,
+          borderRadius: 12,
         },
       },
     },
