@@ -85,8 +85,8 @@ const getTheme = (mode) => createTheme({
     MuiContainer: {
       styleOverrides: {
         root: {
-          paddingLeft: 12,
-          paddingRight: 12,
+          paddingLeft: 8,
+          paddingRight: 8,
           '@media (min-width: 600px)': {
             paddingLeft: 24,
             paddingRight: 24,
@@ -206,10 +206,10 @@ function MainApp() {
         sx={{ 
           minHeight: '100vh', 
           backgroundColor: '#0f0f0f',
-          py: { xs: 1, sm: 2, md: 4 },
+          py: { xs: 0.5, sm: 2, md: 4 },
           position: 'relative',
           overflow: 'hidden',
-          pb: { xs: 8, sm: 4 }, // Extra bottom padding for mobile
+          pb: { xs: 6, sm: 4 }, // Extra bottom padding for mobile
         }}
       >
 
@@ -218,7 +218,7 @@ function MainApp() {
           sx={{ 
             position: 'relative', 
             zIndex: 1,
-            px: { xs: 1, sm: 2, md: 3 },
+            px: { xs: 0.5, sm: 2, md: 3 },
             maxWidth: { xs: '100%', sm: 'none' },
           }}
         >
@@ -226,17 +226,17 @@ function MainApp() {
           <Paper
             elevation={8}
             sx={{ 
-              mb: { xs: 1.5, sm: 2, md: 4 },
+              mb: { xs: 1, sm: 2, md: 4 },
               textAlign: 'center', 
               position: 'relative',
               backdropFilter: 'blur(10px)',
               borderRadius: { xs: 2, md: 4 },
-              p: { xs: 1.5, sm: 2, md: 3 },
-              mx: { xs: 0.5, sm: 0 }, // Small side margins on very small screens
+              p: { xs: 1.25, sm: 2, md: 3 },
+              mx: { xs: 0, sm: 0 },
               boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: { xs: 1, sm: 2 } }}>
               <HollaCharacter mood={hollaMood} />
             </Box>
             
@@ -245,8 +245,9 @@ function MainApp() {
               sx={{
                 fontWeight: 'bold',
                 color: 'text.primary',
-                mb: { xs: 0.5, md: 1 },
-                fontSize: { xs: '1.1rem', sm: '1.25rem', md: '2.125rem' },
+                mb: { xs: 0.25, md: 1 },
+                fontSize: { xs: '1.05rem', sm: '1.25rem', md: '2.125rem' },
+                lineHeight: 1.2,
               }}
             >
               Welcome back, {currentUser}!
@@ -256,9 +257,10 @@ function MainApp() {
               sx={{ 
                 color: '#ff6347',
                 fontWeight: 500,
-                mb: { xs: 1, md: 2 },
-                px: { xs: 0.5, md: 0 },
-                fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' },
+                mb: { xs: 0.75, md: 2 },
+                px: { xs: 0, md: 0 },
+                fontSize: { xs: '0.8rem', sm: '1rem', md: '1.25rem' },
+                lineHeight: 1.3,
               }}
             >
               {hollaMessage}
@@ -272,7 +274,7 @@ function MainApp() {
               display: 'flex', 
               gap: 1,
               justifyContent: 'center',
-              mt: { xs: 2, md: 0 },
+              mt: { xs: 1, md: 0 },
             }}>
               <Button
                 variant="outlined"
@@ -305,7 +307,7 @@ function MainApp() {
               xs: '1fr', 
               lg: '2fr 1fr' 
             },
-            gap: { xs: 2, md: 3, lg: 4 },
+            gap: { xs: 1, md: 3, lg: 4 },
             minHeight: 'calc(100vh - 200px)',
             position: 'relative',
           }}>
@@ -314,7 +316,7 @@ function MainApp() {
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column', 
-              gap: { xs: 2, md: 3 },
+              gap: { xs: 1, md: 3 },
               minHeight: 'fit-content',
             }}>
               {/* Quote Section - Featured */}
@@ -323,9 +325,9 @@ function MainApp() {
               {/* Habits Section */}
               <Box sx={{
                 background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
-                borderRadius: { xs: 3, md: 4 },
+                borderRadius: { xs: 2, md: 4 },
                 border: '1px solid rgba(255, 99, 71, 0.1)',
-                p: { xs: 2, md: 3 },
+                p: { xs: 1.5, md: 3 },
                 position: 'relative',
                 overflow: 'hidden',
                 '&::before': {
@@ -346,7 +348,7 @@ function MainApp() {
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column', 
-              gap: { xs: 2, md: 3 },
+              gap: { xs: 1, md: 3 },
               position: { lg: 'sticky' },
               top: { lg: '2rem' },
               height: { lg: 'fit-content' },
@@ -354,9 +356,9 @@ function MainApp() {
               {/* Memory Logger */}
               <Box sx={{
                 background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
-                borderRadius: { xs: 3, md: 4 },
+                borderRadius: { xs: 2, md: 4 },
                 border: '1px solid rgba(255, 99, 71, 0.1)',
-                p: { xs: 2, md: 3 },
+                p: { xs: 1.5, md: 3 },
                 position: 'relative',
                 overflow: 'hidden',
                 '&::before': {
@@ -375,9 +377,9 @@ function MainApp() {
               {/* Progress Graph */}
               <Box sx={{
                 background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
-                borderRadius: { xs: 3, md: 4 },
+                borderRadius: { xs: 2, md: 4 },
                 border: '1px solid rgba(255, 99, 71, 0.1)',
-                p: { xs: 2, md: 3 },
+                p: { xs: 1.5, md: 3 },
                 position: 'relative',
                 overflow: 'hidden',
                 '&::before': {
@@ -399,12 +401,12 @@ function MainApp() {
           <Paper
             elevation={2}
             sx={{ 
-              mt: { xs: 2, sm: 3, md: 4 },
+              mt: { xs: 1.5, sm: 3, md: 4 },
               textAlign: 'center',
               backdropFilter: 'blur(10px)',
               borderRadius: { xs: 2, md: 3 },
-              p: { xs: 1.5, sm: 2 },
-              mx: { xs: 0.5, sm: 0 },
+              p: { xs: 1.25, sm: 2 },
+              mx: { xs: 0, sm: 0 },
             }}
           >
             <Typography 
