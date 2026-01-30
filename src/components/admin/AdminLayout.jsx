@@ -15,6 +15,7 @@ import {
   Dashboard as DashboardIcon,
   Photo as PhotoIcon,
   CheckCircle as CheckCircleIcon,
+  CreditCard as CreditCardIcon,
   Settings as SettingsIcon,
 } from '@mui/icons-material';
 import AdminSidebar from './AdminSidebar';
@@ -35,6 +36,7 @@ const AdminLayout = () => {
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
     { text: 'Memories', icon: <PhotoIcon />, path: '/admin/memories' },
     { text: 'Habits', icon: <CheckCircleIcon />, path: '/admin/habits' },
+    { text: 'Subscriptions', icon: <CreditCardIcon />, path: '/admin/subscriptions' },
     { text: 'Settings', icon: <SettingsIcon />, path: '/admin/settings' },
   ];
 

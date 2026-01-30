@@ -8,12 +8,14 @@ import HollaCharacter from './components/HollaCharacter';
 import HabitCheckbox from './components/HabitCheckbox';
 import Onboarding from './components/Onboarding';
 import QuoteOfTheDay from './components/QuoteOfTheDay';
+import SubscriptionViewer from './components/SubscriptionViewer';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './components/admin/AdminDashboard';
 import AdminMemories from './components/admin/AdminMemories';
 import AdminHabits from './components/admin/AdminHabits';
 import AdminSettings from './components/admin/AdminSettings';
+import AdminSubscriptions from './components/admin/AdminSubscriptions';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -418,6 +420,27 @@ function MainApp() {
               top: { lg: '2rem' },
               height: { lg: 'fit-content' },
             }}>
+              {/* Subscription Viewer */}
+              <Box sx={{
+                background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
+                borderRadius: { xs: 2, md: 4 },
+                border: '1px solid rgba(255, 99, 71, 0.1)',
+                p: { xs: 1.5, md: 3 },
+                position: 'relative',
+                overflow: 'hidden',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '2px',
+                  background: 'linear-gradient(90deg, #ff6347, #ff8570)',
+                },
+              }}>
+                <SubscriptionViewer userName={currentUser} />
+              </Box>
+
               {/* Memory Logger */}
               <Box sx={{
                 background: 'linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%)',
@@ -535,6 +558,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="memories" element={<AdminMemories />} />
             <Route path="habits" element={<AdminHabits />} />
+            <Route path="subscriptions" element={<AdminSubscriptions />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
           </Route>
